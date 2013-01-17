@@ -1,0 +1,17 @@
+#newShell.modal
+  .modal-header
+    h3 New Shell
+  .modal-body
+    div
+      input#name(type='text', placeholder='shell name', value='shell')
+      | @
+      input#host(type='text', placeholder='localhost')
+    div
+      input#username(type='text', placeholder='username')
+      | or leave empty
+    div
+      input#password(type='password', placeholder='password')
+      | or leave empty
+  .modal-footer
+    a.btn(href='#', data-dismiss='modal') Close
+    a#createBtn.btn.btn-primary(href='javascript: void(0);') Create

@@ -1,0 +1,17 @@
+{
+  "BundleCode": {
+    "useCache": false,
+    "debug": true,
+    "uglify": false
+  },
+  "RenderPage": {
+    "useCache": false
+  },
+  "SocketIOActions": {
+    "log": true
+  },
+  "ExpressHttpPages": {
+    "log": true,
+    "debug": true
+  }
+}

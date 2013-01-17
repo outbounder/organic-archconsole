@@ -1,0 +1,34 @@
+{
+  "BundleCode": {
+    "source": "node_modules/organic-webcell/plasma/BundleCode",
+    "useCache": true,
+    "debug": true,
+    "uglify": true
+  },
+  "RenderPage": {
+    "source": "node_modules/organic-webcell/plasma/RenderPage",
+    "useCache": true
+  },
+  "BundleStyle": {
+    "source": "node_modules/organic-webcell/plasma/BundleStyle"
+  },
+  "ErrorHandler": {
+    "source": "node_modules/organic-webcell/plasma/ErrorHandler"
+  },
+  "SocketIOActions": {
+    "source": "plasma/SocketIOActions",
+    "cwd": {
+      "actions": "/io-actions"
+    }
+  },
+  "ExpressHttpPages": {
+    "source": "node_modules/organic-webcell/plasma/ExpressHttpPages",
+    "cwd": {
+      "pages": "/pages"
+    }
+  },
+  "Self": {
+    "source": "node_modules/organic-cells/plasma/Self",
+    "tissue": "archconsole"
+  }
+}
