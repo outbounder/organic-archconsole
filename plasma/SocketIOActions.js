@@ -59,29 +59,32 @@ module.exports.prototype.loadActions = function(io, config, context, callback){
   });
 }
 
-module.exports.prototype.mountAction = function(socket, method, url, action) {
-  if(url == "")
-    url = "/";
-  if(this.config.log)
-    console.log("socketio action", method, url);
-  socket.on(method+" "+url, action);
-};
-
 module.exports.prototype.mountSocketIOActions = function(io, root, actions) {
   var root = actions.root || root;
   var self = this;
-  io.on("connection", function(socket){
-    for(var key in actions) {
-      var parts = key.split(" ");
-      var method = parts.shift();
-      var url = parts.pop();
-      var actionHandler = actions[key];
-      if(typeof actionHandler === "string") {
-        actionHandler = actions[actionHandler];
-        if(typeof actionHandler !== "function" && !Array.isArray(actionHandler))
-          throw new Error(actionHandler+" was not found");
-      }
-      self.mountAction(socket, method, root+(url?url:""), actionHandler);
+  var actionsList = [];
+  for(var key in actions) {
+    var parts = key.split(" ");
+    var method = parts.shift();
+    var url = parts.pop();
+    var actionHandler = actions[key];
+    if(typeof actionHandler === "string") {
+      actionHandler = actions[actionHandler];
+      if(typeof actionHandler !== "function" && !Array.isArray(actionHandler))
+        throw new Error(actionHandler+" was not found");
     }
+    url = root+(url?url:"");
+    if(url == "") url = "/";
+    actionsList.push({ event: method + " " + url, handler: actionHandler});
+    if(this.config.log)
+      console.log("socketio action", method, url);
+  }
+
+  io.on("connection", function(socket){
+    actionsList.forEach(function(a){
+      socket.on(a.event, function(data, callback){
+        a.handler(data, callback, socket);
+      });
+    })
   })
 }

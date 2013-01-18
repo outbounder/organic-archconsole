@@ -1,8 +1,12 @@
 module.exports = Backbone.View.extend({
+  readonlyInput: jadeCompile(require("../templates/readonlyInput.jade.raw")),
   events: {
     "keydown :input": "keypress"
   },
   keypress: function(e){
+
+    var self = this;
+
     if(e.keyCode == 13) {
 
       var commandData = {
@@ -10,27 +14,34 @@ module.exports = Backbone.View.extend({
         value: this.$("input").val()
       }
 
-      this.$("input").attr("readonly", true);
-      archconsole.emit("archconsole::ui::"+this.model.get("shelluuid")+"::command::execute", commandData);
+      this.$("input").replaceWith(this.readonlyInput(commandData));
 
-      var self = this;
-
-      var commandExecuteResult = "archconsole::ui::"+this.model.get("shelluuid")+"::command::execute::result";
-      var handleCommandExecuteResult = function(data){
-        archconsole.off(commandExecuteResult, handleCommandExecuteResult);
+      archconsole.emit("POST /commands/execute", commandData, function(data){
         self.model.set(data);
         self.$(".result").addClass(self.model.get("uuid"));
-        var commandExecuteData = "archconsole::ui::"+self.model.get("shelluuid")+"::"+self.model.get("uuid")+"::execute::data";
-        var handleCommandDataResult = function(data){
-          archconsole.off(commandExecuteData, handleCommandDataResult);
-          self.$("."+self.model.get("uuid")).html(data);
-          self.trigger("finished");
-          self.unbind();
-        }
-        archconsole.on(commandExecuteData, handleCommandDataResult);
-      }
-      archconsole.on(commandExecuteResult, handleCommandExecuteResult);
+        self.handleCommandOutputEvent = self.model.get("shelluuid")+"/"+self.model.get("uuid")+"/output";
+        self.commandExecuteTerminatedEvent = self.model.get("shelluuid")+"/"+self.model.get("uuid")+"/terminated";
+        archconsole.on(self.handleCommandOutputEvent, function(data){
+          self.handleCommandOutput(data);
+        });
+        archconsole.on(self.commandExecuteTerminatedEvent, function(data){
+          self.handleCommandTermianted(data)
+        });
+      });
     }
+
+    if(e.ctrlKey && e.keyCode == 67) { // CTRL+C
+      archconsole.emit("POST /commands/terminate", self.model.toJSON());
+    }
+  },
+  handleCommandOutput : function(data){
+    this.$("."+this.model.get("uuid")).append(data);
+  },
+  handleCommandTermianted: function(data){
+    archconsole.removeListener(this.handleCommandOutputEvent, this.handleCommandOutput);
+    archconsole.removeListener(this.commandExecuteTerminatedEvent, this.handleCommandTermianted);
+    this.trigger("finished");
+    this.unbind();
   },
   render: function(){
     this.$el.html(require("../templates/command.jade")); 

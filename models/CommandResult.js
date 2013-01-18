@@ -23,7 +23,7 @@ module.exports.prototype.outputData = function(){
   if (/[\u0000]/.test(attempt)) {
     binary = true;
   }
-  console.log(binary);
+
   if(binary) {
     var data = "";
     for(var i = 0; i<this.buffer.length; i++)

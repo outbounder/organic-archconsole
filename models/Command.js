@@ -5,68 +5,64 @@ var path = require("path");
 
 module.exports = function(data){
   _.extend(this, data);
+  this.finished = false;
 }
 
 module.exports.prototype.toJSON = function(){
   return {
     uuid: this.uuid,
     shelluuid: this.shelluuid,
-    value: this.value
+    value: this.value,
+    finished: this.finished
   }
 }
 
-module.exports.prototype.start = function(archconsole){
-  
-  var parts = this.value.split(" ");
-  var cmd = parts.shift();
-
+module.exports.prototype.start = function(socket, runtime){
   var self = this;
-  path.exists(__dirname+"/../../commands/"+cmd+".js", function(exists){
 
-    var options = {
-      cwd: self.shell.cwd,
-      env: self.shell.env,
-      encoding: "binary"
-    };
+  var options = {
+    cwd: self.shell.cwd,
+    env: self.shell.env,
+    encoding: "binary"
+  };
+  var realtimeOutput = true;
 
-    if(exists){
-      var Command = require(__dirname+"/../../commands/"+cmd+".js");
-      self.childProcess = new Command();
-    } else {
-      console.log(options);
-      self.childProcess = exec(self.value, options);
+  self.childProcess = exec(self.value, options);
+
+  self.stdin = self.childProcess.stdin;
+  self.stdout = self.childProcess.stdout;
+  self.stderr = self.childProcess.stderr;
+  self.commandResult = new CommandResult();
+  
+  self.stdout.on("data", function(data){
+    self.commandResult.append(data);
+
+    var attempt = data.toString('utf-8').replace(/�$/, ''), error = attempt.indexOf('�');
+    if (error != -1) {
+      utf8 = false;
     }
-
-    self.stdin = self.childProcess.stdin;
-    self.stdout = self.childProcess.stdout;
-    self.stderr = self.childProcess.stderr;
-    self.commandResult = new CommandResult();
-
-    
-    self.stdout.on("data", function(chunk){
-      self.commandResult.append(chunk);
-      archconsole.emit("archconsole::ui::"+self.shelluuid+"::"+self.uuid+"::execute::stdout", chunk);
-    });
-
-    self.stderr.on("data", function(chunk){
-      self.commandResult.append(chunk);
-      archconsole.emit("archconsole::ui::"+self.shelluuid+"::"+self.uuid+"::execute::stderr", chunk);
-    });
-
-    self.childProcess.on("close", function(code, signal){
-      self.childProcess.exited = true;
-      var data = self.commandResult.outputData();
-      archconsole.emit("archconsole::ui::"+self.shelluuid+"::"+self.uuid+"::execute::data", data);
-      archconsole.emit("archconsole::ui::"+self.shelluuid+"::"+self.uuid+"::execute::terminate", self.uuid);
-    });
-
-    if(exists)
-      self.childProcess.run(parts.join(" "), options, self.shell, archconsole);
+    if (/[\u0000]/.test(attempt)) {
+      realtimeOutput = false;
+    } else
+      socket.emit(self.shelluuid+"/"+self.uuid+"/output", data);
   });
+
+  self.stderr.on("data", function(chunk){
+    socket.emit(self.shelluuid+"/"+self.uuid+"/output", chunk);
+  });
+
+  self.childProcess.on("close", function(code, signal){
+    if(!realtimeOutput) {
+      var data = self.commandResult.outputData();
+      socket.emit(self.shelluuid+"/"+self.uuid+"/output", data);
+    }
+    socket.emit(self.shelluuid+"/"+self.uuid+"/terminated", self.uuid);
+  });
+
 }
 
-module.exports.prototype.terminate = function(archconsole){
-  if(!this.childProcess.exited)
+module.exports.prototype.terminate = function(){
+  if(this.childProcess)
     this.childProcess.kill();
   this.childProcess = null;
   this.stdin = this.stderr = this.stdout = null;
