@@ -1,6 +1,6 @@
 var _ = require("underscore");
+var spawn = require("child_process").spawn;
 var exec = require("child_process").exec;
-var CommandResult = require("./CommandResult");
 var path = require("path");
 
 module.exports = function(data){
@@ -17,7 +17,7 @@ module.exports.prototype.toJSON = function(){
   }
 }
 
-module.exports.prototype.start = function(socket, runtime){
+module.exports.prototype.start = function(){
   var self = this;
 
   var options = {
@@ -26,39 +26,16 @@ module.exports.prototype.start = function(socket, runtime){
     encoding: "binary"
   };
   var realtimeOutput = true;
-
-  self.childProcess = exec(self.value, options);
+  if(self.value.indexOf("|") === -1 && self.value.indexOf("&") === -1 && self.value.indexOf(";") === -1) {
+    var args = self.value.split(" ");
+    var cmd = args.shift();
+    self.childProcess = spawn(cmd, args, options);
+  } else
+    self.childProcess = exec(self.value, options);
 
   self.stdin = self.childProcess.stdin;
   self.stdout = self.childProcess.stdout;
   self.stderr = self.childProcess.stderr;
-  self.commandResult = new CommandResult();
-  
-  self.stdout.on("data", function(data){
-    self.commandResult.append(data);
-
-    var attempt = data.toString('utf-8').replace(/�$/, ''), error = attempt.indexOf('�');
-    if (error != -1) {
-      utf8 = false;
-    }
-    if (/[\u0000]/.test(attempt)) {
-      realtimeOutput = false;
-    } else
-      socket.emit(self.shelluuid+"/"+self.uuid+"/output", data);
-  });
-
-  self.stderr.on("data", function(chunk){
-    socket.emit(self.shelluuid+"/"+self.uuid+"/output", chunk);
-  });
-
-  self.childProcess.on("close", function(code, signal){
-    if(!realtimeOutput) {
-      var data = self.commandResult.outputData();
-      socket.emit(self.shelluuid+"/"+self.uuid+"/output", data);
-    }
-    socket.emit(self.shelluuid+"/"+self.uuid+"/terminated", self.uuid);
-  });
-
 }
 
 module.exports.prototype.terminate = function(){

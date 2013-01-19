@@ -1,4 +1,9 @@
-var User = require("../models/User");
+var runtime = require("../models/runtime");
+
 module.exports = function(config){
-  return {};
+  return {
+    "GET": function(data, callback){
+      callback(runtime.user);
+    }
+  }
 }

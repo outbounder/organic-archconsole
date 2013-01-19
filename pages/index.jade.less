@@ -1,2 +1,25 @@
 @import "/bootstrap.min.css";
 @import "/bootstrap-responsive.min.css";
+@import "/termkit.css";
+@import "/typography.css";
+
+.rounded-corners (@radius: 5px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  -ms-border-radius: @radius;
+  -o-border-radius: @radius;
+  border-radius: @radius;
+}
+
+ul.autocomplete {
+  list-style-type: none;
+  position: absolute;
+  min-height: 20px;
+  min-width: 120px;
+}
+
+.autocomplete li.active {
+  .rounded-corners; 
+  background-color: whiteSmoke;
+  color: black;
+}

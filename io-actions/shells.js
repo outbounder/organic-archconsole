@@ -7,19 +7,16 @@ var uuid = function () {
 }
 
 module.exports = function(config){
+  var archpackage = require("../package.json");
   return {
     "POST /create": function(data, callback){
-      if(!data.name) {
-        callback(new Error("could not create shell without name"));
-        return;
-      }
-
       var shell = new Shell(data);
       shell.uuid = uuid();
-      shell.user = null;
+      shell.user = runtime.user;
       shell.cwd = process.cwd();
       shell.runningCommand = null;
       shell.commandsHistory = null;
+      shell.version = archpackage.version;
       runtime.shells.push(shell);
       callback(shell.toJSON());
     },
@@ -34,6 +31,13 @@ module.exports = function(config){
       runtime.shell.removeByUUID(data);
 
       callback(true);
+    },
+    "GET /autocomplete": function(data, callback){
+      var shells = runtime.shells.findByUUID(data.uuid);
+      if(!shells)
+        return;
+
+      shells.autocomplete(data.value, callback);
     }
   }
 }

@@ -5,7 +5,7 @@
         span.icon-bar
         span.icon-bar
         span.icon-bar
-      a.brand(href='#') Menu
+      a.brand(href='#')= user.get("username")
       .nav-collapse
-        a.btn.pull-left(href='#newShell') Launch New Shell
-        ul.nav.nav-pills.shellBtns
+        // a.btn.pull-left(href='#newShell') Launch New Shell
+        // ul.nav.nav-pills.shellBtns

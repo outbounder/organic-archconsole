@@ -1,11 +1,23 @@
+var ShellView = require("./ShellView");
+
 module.exports = Backbone.View.extend({
-  initialize: function(){
+  menu: jadeCompile(require("../templates/menu.jade.raw")),
+  statusbar: jadeCompile(require("../templates/statusbar.jade.raw")),
+  
+  initialize: function(options){
+    this.shell = options.shell;
+    this.currentShellView = new ShellView({model: options.shell, el: $(".shellContainer")});
+    this.shell.on("change", this.updateStatusbar, this);
+  },
+  updateStatusbar: function(){
+    this.$(".statusbarContainer").html(this.statusbar({
+      user: this.model, shell: this.shell}));
+    return this;
   },
   render: function(){
-    this.$(".menuContainer").html(require("../templates/menu.jade"));
-    this.$(".statusbarContainer").html(require("../templates/statusbar.jade"));
-    $("#status-cwd").html(this.model.get("cwd"));
-    $("#status-time").html(this.model.get("time"));
+    this.$(".menuContainer").html(this.menu({user: this.model}));
+    this.updateStatusbar();
+    this.currentShellView.render();    
     return this;
   }
 });

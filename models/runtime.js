@@ -1,3 +1,5 @@
+var User = require("./User");
+
 var shells = [];
 shells.findByUUID = function(uuid) {
   for(var i = 0; i<this.length; i++)
@@ -29,3 +31,8 @@ commands.removeByUUID = function(uuid){
 
 module.exports.shells = shells;
 module.exports.commands = commands;
+
+module.exports.user = new User({
+  username: process.env['USER'],
+  home: process.env['HOME']
+});
