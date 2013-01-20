@@ -11,8 +11,10 @@ module.exports = Backbone.View.extend({
     this.curCommand = this.model;
   },
   bindToMenu: function(e){
-    if(this.model.get("running") === false)
-      $(".shellBtns").append(new ShellBtnView({ model: this.model }).render().el);
+    $(".shellBtns").append(new ShellBtnView({ model: this.model }).render().el);
+    if(this.model.get("running") === true) {
+      runtime.archconsoleView.currentShellView.createNewCommand();
+    }
   },
   autocomplete: function(){
     var self = this;
@@ -32,10 +34,11 @@ module.exports = Backbone.View.extend({
       self.autocompleteView.selectFirst();
     });
   },
-  executeCommand: function(){
+  executeCommand: function(cwd){
     var commandData = {
       shelluuid: this.model.get('shelluuid'),
-      value: this.$("input").val()
+      value: this.$("input").val(),
+      cwd: cwd
     }
     this.$("input").replaceWith(this.readonlyInput(commandData));
     this.$(".output").removeClass("hidden");
@@ -43,9 +46,12 @@ module.exports = Backbone.View.extend({
     $(window).bind('keydown', this.comamndKeydown.bind(this));
     var self = this;
     this.model.set("running", true);
+
     archconsole.emit("POST /commands/execute", commandData, function(data){
+      if(!data.uuid) return self.handleCommandTermianted(data);
       self.model.set(data);
       self.$(".result").addClass(self.model.get("uuid"));
+      self.$el.attr("data-id", self.model.get("uuid"));
       self.handleCommandOutputEvent = self.model.get("shelluuid")+"/"+self.model.get("uuid")+"/output";
       self.commandExecuteTerminatedEvent = self.model.get("shelluuid")+"/"+self.model.get("uuid")+"/terminated";
       archconsole.on(self.handleCommandOutputEvent, function(data){

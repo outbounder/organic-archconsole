@@ -22,11 +22,11 @@ module.exports.prototype.start = function(){
   var self = this;
 
   var options = {
-    cwd: self.shell.cwd,
+    cwd: this.cwd || self.shell.cwd,
     env: self.shell.env,
     encoding: "binary"
   };
-  this.cwd = self.shell.cwd;
+  
   
   var realtimeOutput = true;
   var shellCmd = self.value.indexOf("|") !== -1 ||

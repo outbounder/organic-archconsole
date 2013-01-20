@@ -20,18 +20,19 @@ module.exports = function(config){
   return {
     "POST /execute": function(data, callback, socket){
       var shell = runtime.shells.findByUUID(data.shelluuid);
-      if(!shell) {
-        callback(new Error("could not find shell"));
+      if(!shell || !data.value || data.value.length == 0) {
+        callback(new Error("could start"));
         return;
       }
 
       var command = new Command(data);
       command.shell = shell;
-      command.uuid = uuid();
-
+      command.uuid = data.uuid || uuid();
+      command.cwd = command.cwd || shell.cwd;
+      
       shell.runningCommand = command;
       runtime.commands.push(command);
-      
+
       callback(command.toJSON());
 
       if(command.value.length == 0) {
@@ -78,6 +79,7 @@ module.exports = function(config){
           });
         });
       }
+
     },
     "POST /terminate": function(data, callback, socket){
       var command = runtime.commands.findByUUID(data.uuid);

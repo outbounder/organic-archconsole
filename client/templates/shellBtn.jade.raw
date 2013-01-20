@@ -1,2 +1,1 @@
-li
-  a()= model.get("value")
+a()= model.get("value")
