@@ -8,8 +8,10 @@ module.exports = Backbone.View.extend({
     var command = new Command({
       shelluuid: this.model.get('uuid')
     });
-    if(this.commandView)
+    if(this.commandView) {
       command.previousCommand = this.commandView.model;
+      this.commandView.model.nextCommand = command;
+    }
     var commandContainer = $("<div class='command'></div>");
     this.$el.append(commandContainer);
     this.commandView = new CommandView({el: commandContainer, model: command});

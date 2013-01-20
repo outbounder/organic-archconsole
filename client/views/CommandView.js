@@ -5,6 +5,9 @@ module.exports = Backbone.View.extend({
   events: {
     "keydown :input": "keydown"
   },
+  initialize: function(){
+    this.curCommand = this.model;
+  },
   autocomplete: function(){
     var self = this;
     var inputData = {uuid: this.model.get("shelluuid"), value: this.$("input").val()};
@@ -47,17 +50,33 @@ module.exports = Backbone.View.extend({
     });
   },
   comamndKeydown: function(e){
-    if(e.ctrlKey && e.keyCode == 67) { // CTRL+C
+    if(e.shiftKey && e.ctrlKey && e.keyCode == 67) { // SHIFT+CTRL+C
       e.preventDefault();
       archconsole.emit("POST /commands/terminate", this.model.toJSON());
     }
   },
   keydown: function(e){
     var self = this;
-    
-    if(e.keyCode == 38 && this.$("input").val().length == 0) {
+    var notTypedSomething = (
+      this.$("input").val().length == 0 || 
+      (this.curCommand && this.$("input").val() == this.curCommand.get("value"))
+    )
+
+    if(e.keyCode == 38 && notTypedSomething) {
       e.preventDefault();
-      this.$("input").val(this.model.previousCommand.get("value"));
+      if(this.curCommand.previousCommand) {
+        this.curCommand = this.curCommand.previousCommand;
+        this.$("input").val(this.curCommand.get("value"));
+      } 
+      return;
+    }
+
+    if(e.keyCode == 40 && notTypedSomething) {
+      e.preventDefault();
+      if(this.curCommand.nextCommand) {
+        this.curCommand = this.curCommand.nextCommand;
+        this.$("input").val(this.curCommand.get("value"));
+      } 
       return;
     }
 

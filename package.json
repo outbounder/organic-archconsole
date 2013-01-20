@@ -8,7 +8,8 @@
     "organic-cells": "0.0.6",
     "underscore": "latest",
     "glob": "latest",
-    "async": "latest"
+    "async": "latest",
+    "shelljs": "latest"
   },
   "devDependencies": {},
   "optionalDependencies": {},

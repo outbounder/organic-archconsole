@@ -105,3 +105,20 @@ socketio action POST /commands/terminate
 pagecode GET /code.js
 page GET /
 pagestyle GET /style.css
+middleware:  /home/outbounder/projects/outbounder/organic-archconsole/node_modules/organic-webcell/membrane/expressMiddleware/cookieParser [33m{}[39m
+middleware:  /home/outbounder/projects/outbounder/organic-archconsole/node_modules/organic-webcell/membrane/expressMiddleware/allowCrossDomain [33m{}[39m
+middleware:  /home/outbounder/projects/outbounder/organic-archconsole/node_modules/organic-webcell/membrane/expressMiddleware/staticFolder [33m{"source":"node_modules/organic-webcell/membrane/expressMiddleware/staticFolder","staticDir":"public/"}[39m
+middleware:  /home/outbounder/projects/outbounder/organic-archconsole/node_modules/organic-webcell/membrane/expressMiddleware/staticFolder [33m{"source":"node_modules/organic-webcell/membrane/expressMiddleware/staticFolder","staticDir":"style/"}[39m
+middleware:  /home/outbounder/projects/outbounder/organic-archconsole/node_modules/organic-webcell/membrane/expressMiddleware/bodyParser [33m{"source":"node_modules/organic-webcell/membrane/expressMiddleware/bodyParser","uploadDir":"uploads/","keepExtensions":true}[39m
+middleware:  /home/outbounder/projects/outbounder/organic-archconsole/node_modules/organic-webcell/membrane/expressMiddleware/gzip [33m{"source":"node_modules/organic-webcell/membrane/expressMiddleware/gzip"}[39m
+HttpServer running at http://127.0.0.1:3333/
+info: socket.io started
+socketio action GET /user
+socketio action POST /shells/create
+socketio action DELETE /shells/remove
+socketio action GET /shells/autocomplete
+socketio action POST /commands/execute
+socketio action POST /commands/terminate
+pagecode GET /code.js
+page GET /
+pagestyle GET /style.css
