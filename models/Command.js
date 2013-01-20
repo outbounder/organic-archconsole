@@ -13,7 +13,8 @@ module.exports.prototype.toJSON = function(){
     uuid: this.uuid,
     shelluuid: this.shelluuid,
     value: this.value,
-    finished: this.finished
+    finished: this.finished,
+    cwd: this.cwd
   }
 }
 
@@ -25,6 +26,8 @@ module.exports.prototype.start = function(){
     env: self.shell.env,
     encoding: "binary"
   };
+  this.cwd = self.shell.cwd;
+  
   var realtimeOutput = true;
   if(self.value.indexOf("|") === -1 && self.value.indexOf("&") === -1 && self.value.indexOf(";") === -1) {
     var args = self.value.split(" ");

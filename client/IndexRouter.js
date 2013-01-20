@@ -12,6 +12,7 @@ module.exports = Backbone.Router.extend({
       var shell = new Shell(shellData);
       
       var view = new ArchConsoleView({model: runtime.user, shell: shell, el: $(".container")});
+      runtime.archconsoleView = view;
       view.render();
 
       archconsole.on(shell.get('uuid')+"/updated", function(data){

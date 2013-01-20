@@ -1,12 +1,18 @@
 var CommandAutocompleteView = require("./CommandAutocompleteView");
+var ShellBtnView = require("./ShellBtnView");
 
 module.exports = Backbone.View.extend({
   readonlyInput: jadeCompile(require("../templates/readonlyInput.jade.raw")),
   events: {
-    "keydown :input": "keydown"
+    "keydown :input": "keydown",
+    "click .status": "bindToMenu"
   },
   initialize: function(){
     this.curCommand = this.model;
+  },
+  bindToMenu: function(e){
+    if(this.model.get("running") === false)
+      $(".shellBtns").append(new ShellBtnView({ model: this.model }).render().el);
   },
   autocomplete: function(){
     var self = this;
@@ -36,6 +42,7 @@ module.exports = Backbone.View.extend({
     this.$(".status").removeClass("alert-info");
     $(window).bind('keydown', this.comamndKeydown.bind(this));
     var self = this;
+    this.model.set("running", true);
     archconsole.emit("POST /commands/execute", commandData, function(data){
       self.model.set(data);
       self.$(".result").addClass(self.model.get("uuid"));
@@ -115,6 +122,7 @@ module.exports = Backbone.View.extend({
     window.scrollTo(0, document.body.scrollHeight);
   },
   handleCommandTermianted: function(data){
+    this.model.set("running", false);
     if(data.code == 0)
       this.$(".status").addClass("alert-success");
     else
