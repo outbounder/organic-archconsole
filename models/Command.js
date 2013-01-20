@@ -29,7 +29,11 @@ module.exports.prototype.start = function(){
   this.cwd = self.shell.cwd;
   
   var realtimeOutput = true;
-  if(self.value.indexOf("|") === -1 && self.value.indexOf("&") === -1 && self.value.indexOf(";") === -1) {
+  var shellCmd = self.value.indexOf("|") !== -1 ||
+    self.value.indexOf("&") !== -1 || 
+    self.value.indexOf(";") !== -1 ||
+    self.value.indexOf('"') !== -1;
+  if(!shellCmd) {
     var args = self.value.split(" ");
     var cmd = args.shift();
     self.childProcess = spawn(cmd, args, options);
