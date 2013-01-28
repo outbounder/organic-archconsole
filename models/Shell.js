@@ -28,7 +28,10 @@ module.exports.prototype.terminate = function(archconsole){
 var searchPath = function(target, match, callback){
   var entries = [];
   fs.readdir(target, function(err, files){
-    if(err) return callback(err);
+    if(err) {
+      console.log(err);
+      return callback(null, []);
+    }
     files.forEach(function(f){
       if(f.indexOf(match) === 0)
         entries.push({match: f.replace(match,""), value: f});
@@ -38,16 +41,24 @@ var searchPath = function(target, match, callback){
 }
 
 module.exports.prototype.autocomplete = function(term, callback){
-  var target = term.split(" ").pop();
+  
+  var target = term.split(" ").pop(); // last word is the target
+  
+  // assuming it is a file or directory
   if(target.indexOf("~") === 0)
     target = path.normalize(target.replace("~", this.user.home));
-  if(target.indexOf(".") === 0 || target.indexOf("/") !== 0)
-    target = path.normalize(this.cwd+"/"+target);
-  var parts = target.split("/");
+  if(target.indexOf(".") === 0 || (target.indexOf("/") !== 0 && target.indexOf(":\\") !== 1))
+    target = path.normalize(path.join(this.cwd,target));
+  
+
+  // get match
+  var parts = target.split(path.sep);
   var match = parts.pop();
-  target = parts.join("/");
+  target = parts.join(path.sep)+path.sep; // target should be a directory to be read from
+
   var entries = [];
-  var paths = [target].concat(process.env.PATH.split(':'));
+  var paths = [target].concat(process.env.PATH.split(';')); // : == Linix , ; == Win
+
   async.map(paths, function(p, callback){
     searchPath(p, match, callback);
   }, function(err, results){

@@ -15,8 +15,6 @@
         "source": "node_modules/organic-webcell/membrane/expressMiddleware/bodyParser", 
         "uploadDir": "uploads/",
         "keepExtensions": true
-      },{
-        "source": "node_modules/organic-webcell/membrane/expressMiddleware/gzip"
       }
     ]
   },
