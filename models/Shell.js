@@ -41,31 +41,39 @@ var searchPath = function(target, match, callback){
 }
 
 module.exports.prototype.autocomplete = function(term, callback){
-  
-  var target = term.split(" ").pop(); // last word is the target
-  
-  // assuming it is a file or directory
-  if(target.indexOf("~") === 0)
-    target = path.normalize(target.replace("~", this.user.home));
-  if(target.indexOf(".") === 0 || (target.indexOf("/") !== 0 && target.indexOf(":\\") !== 1))
-    target = path.normalize(path.join(this.cwd,target));
-  
 
-  // get match
-  var parts = target.split(path.sep);
-  var match = parts.pop();
-  target = parts.join(path.sep)+path.sep; // target should be a directory to be read from
+  var paths = [];
+  var match;
 
-  var entries = [];
-  var paths = [target].concat(process.env.PATH.split(process.platform == "win32"?';':":"));
+  if(term.indexOf(" ") !== -1) {
+    var target = term.split(" ").pop(); // last word is the target
+    
+    // assuming it is a file or directory
+    if(target.indexOf("~") === 0)
+      target = path.normalize(target.replace("~", this.user.home));
+    if(target.indexOf(".") === 0 || (target.indexOf("/") !== 0 && target.indexOf(":\\") !== 1))
+      target = path.normalize(path.join(this.cwd,target));
+    
+    // get match
+    var parts = target.split(path.sep);
+    match = parts.pop();
+    target = parts.join(path.sep)+path.sep; // target should be a directory to be read from
+    
+    paths = paths.concat([target]);  
+  } else {
+    match = term;
+    paths = paths.concat([this.cwd]);
+    paths = paths.concat(process.env.PATH.split(process.platform == "win32"?';':":"));
+  }
 
   async.map(paths, function(p, callback){
     searchPath(p, match, callback);
   }, function(err, results){
+    var entries = [];
     results.forEach(function(r){
       entries = entries.concat(r)  
     });
     callback(entries);
-  })
+  });
   
 }

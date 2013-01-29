@@ -61,7 +61,7 @@ module.exports = Backbone.View.extend({
       (this.curCommand && this.$("input").val() == this.curCommand.get("value"))
     )
 
-    if(e.keyCode == 38 && notTypedSomething) {
+    if(e.keyCode == 38 && notTypedSomething) { // up
       e.preventDefault();
       if(this.curCommand.previousCommand) {
         this.curCommand = this.curCommand.previousCommand;
@@ -70,7 +70,7 @@ module.exports = Backbone.View.extend({
       return;
     }
 
-    if(e.keyCode == 40 && notTypedSomething) {
+    if(e.keyCode == 40 && notTypedSomething) { // down
       e.preventDefault();
       if(this.curCommand.nextCommand) {
         this.curCommand = this.curCommand.nextCommand;
@@ -79,11 +79,11 @@ module.exports = Backbone.View.extend({
       return;
     }
 
-    if(e.keyCode == 9) {
+    if(e.keyCode == 9) { // tab
       e.preventDefault();
       if(self.autocompleteView) {
-        self.autocompleteView.remove();
-        self.autocompleteView = null;
+        self.autocompleteView.selectCurrent();
+        return;
       }
       self.autocomplete();
       return;
