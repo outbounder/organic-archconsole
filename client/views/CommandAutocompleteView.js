@@ -1,4 +1,5 @@
 module.exports = Backbone.View.extend({
+  className: "autocompleteItems",
   template: jadeCompile(require("../templates/CommandAutocomplete.jade.raw")),
   autocompleteItem: jadeCompile(require("../templates/CommandAutocompleteItem.jade.raw")),
   selectFirst: function(){
@@ -22,17 +23,23 @@ module.exports = Backbone.View.extend({
     if(e.keyCode == 38){ // up
       e.preventDefault();
       this.currentAutocompleteItemIndex -= 1;
-      if(this.currentAutocompleteItemIndex < 0)
+      if(this.currentAutocompleteItemIndex < 0) {
         this.currentAutocompleteItemIndex = this.model.length-1;
+        this.$el.css("top", this.baseTop-(this.model.length)*31);
+      }
       this.$("li").removeClass("active");
       this.$("li[data-id="+this.currentAutocompleteItemIndex+"]").addClass("active");
+      this.$el.css("top", "+=31");
       return true;
     } else
     if(e.keyCode == 40){ // down
       e.preventDefault();
       this.currentAutocompleteItemIndex += 1;
-      if(this.currentAutocompleteItemIndex >= this.model.length)
+      if(this.currentAutocompleteItemIndex >= this.model.length) {
         this.currentAutocompleteItemIndex = 0;
+        this.$el.css("top", this.baseTop);
+      } else 
+        this.$el.css("top", "-=31");
       this.$("li").removeClass("active");
       this.$("li[data-id="+this.currentAutocompleteItemIndex+"]").addClass("active");
       return true;

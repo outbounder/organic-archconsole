@@ -11,15 +11,27 @@
   border-radius: @radius;
 }
 
+.autocompleteItems {
+  position: absolute;
+}
+
 ul.autocomplete {
   list-style-type: none;
-  position: absolute;
   min-height: 20px;
   min-width: 120px;
 }
 
+ul.autocomplete li {
+  min-height: 23px;
+  font-size: 13px;
+  height: 18px;
+  line-height: 23px;
+  padding: 4px;
+  background-color: #FAFAFA;
+}
+
 .autocomplete li.active {
   .rounded-corners; 
-  background-color: whiteSmoke;
+  background-color: #F2F2F2;
   color: black;
 }

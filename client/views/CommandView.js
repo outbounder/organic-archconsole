@@ -24,6 +24,9 @@ module.exports = Backbone.View.extend({
       });
       self.$(".autocompleteContainer").append(self.autocompleteView.render().el);
       self.autocompleteView.selectFirst();
+      self.autocompleteView.$el.css("top", self.$el.position().top);
+      self.autocompleteView.$el.css("left", self.$el.position().left+80+self.$("input").val().length*7);
+      self.autocompleteView.baseTop = self.$el.position().top;
     });
   },
   executeCommand: function(cwd){
