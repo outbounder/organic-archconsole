@@ -4,17 +4,10 @@ var ShellBtnView = require("./ShellBtnView");
 module.exports = Backbone.View.extend({
   readonlyInput: jadeCompile(require("../templates/readonlyInput.jade.raw")),
   events: {
-    "keydown :input": "keydown",
-    "click .status": "bindToMenu"
+    "keydown :input": "keydown"
   },
   initialize: function(){
     this.curCommand = this.model;
-  },
-  bindToMenu: function(e){
-    $(".shellBtns").append(new ShellBtnView({ model: this.model }).render().el);
-    if(this.model.get("running") === true) {
-      runtime.archconsoleView.currentShellView.createNewCommand();
-    }
   },
   autocomplete: function(){
     var self = this;
@@ -43,7 +36,7 @@ module.exports = Backbone.View.extend({
     this.$("input").replaceWith(this.readonlyInput(commandData));
     this.$(".output").removeClass("hidden");
     this.$(".status").removeClass("alert-info");
-    $(window).bind('keydown', this.comamndKeydown.bind(this));
+
     var self = this;
     this.model.set("running", true);
 
@@ -61,12 +54,6 @@ module.exports = Backbone.View.extend({
         self.handleCommandTermianted(data)
       });
     });
-  },
-  comamndKeydown: function(e){
-    if(e.shiftKey && e.ctrlKey && e.keyCode == 67) { // SHIFT+CTRL+C
-      e.preventDefault();
-      archconsole.emit("POST /commands/terminate", this.model.toJSON());
-    }
   },
   keydown: function(e){
     var self = this;
@@ -137,7 +124,6 @@ module.exports = Backbone.View.extend({
     archconsole.removeListener(this.commandExecuteTerminatedEvent, this.handleCommandTermianted);
     this.trigger("finished");
     this.unbind();
-    $(window).unbind('keydown', this.comamndKeydown);
     $('html, body').animate({
        scrollTop: $(document).height()
     }, 500);
@@ -145,8 +131,6 @@ module.exports = Backbone.View.extend({
   render: function(){
     this.$el.html(require("../templates/command.jade")); 
     this.$("input").focus();
-    $('html, body').animate({
-       scrollTop: $(document).height()
-    }, 500);
+    return this;
   }
 });

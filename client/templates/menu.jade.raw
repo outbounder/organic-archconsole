@@ -2,3 +2,9 @@
   .navbar-inner
     a.brand(href='#')= user.get("username")
     ul.nav.shellBtns
+      each shell in shells
+        if shell == currentShell
+          li.btn.shellBtn.active(data-id= shell.get("uuid"))= shell.getCurrentCommandTitle()
+        else
+          li.btn.shellBtn(data-id= shell.get("uuid"))= shell.getCurrentCommandTitle()
+      li.btn.addShell +

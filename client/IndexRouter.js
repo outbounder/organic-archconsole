@@ -1,5 +1,4 @@
 var ArchConsoleView = require("./views/ArchConsoleView");
-var Shell = require("./models/Shell");
 
 module.exports = Backbone.Router.extend({
 
@@ -8,17 +7,8 @@ module.exports = Backbone.Router.extend({
   },
 
   landing: function(){
-    archconsole.emit("POST /shells/create", {}, function(shellData){
-      var shell = new Shell(shellData);
-      
-      var view = new ArchConsoleView({model: runtime.user, shell: shell, el: $(".container")});
-      runtime.archconsoleView = view;
-      view.render();
-
-      archconsole.on(shell.get('uuid')+"/updated", function(data){
-        shell.set(data);
-      });
-
-    });
+    var view = new ArchConsoleView({model: runtime.user, el: $(".container")});
+    runtime.archconsoleView = view;
+    view.createNewShell();
   }
 });

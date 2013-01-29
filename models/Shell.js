@@ -57,7 +57,7 @@ module.exports.prototype.autocomplete = function(term, callback){
   target = parts.join(path.sep)+path.sep; // target should be a directory to be read from
 
   var entries = [];
-  var paths = [target].concat(process.env.PATH.split(';')); // : == Linix , ; == Win
+  var paths = [target].concat(process.env.PATH.split(process.platform == "win32"?';':":"));
 
   async.map(paths, function(p, callback){
     searchPath(p, match, callback);

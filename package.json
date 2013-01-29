@@ -1,7 +1,7 @@
 {
   "author": "Boris Filipov",
   "name": "archconsole",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "dependencies": {
     "organic":"0.0.7",
     "organic-webcell": "0.1.6",
