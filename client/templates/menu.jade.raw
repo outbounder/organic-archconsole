@@ -5,6 +5,8 @@
       each shell in shells
         if shell == currentShell
           li.btn.shellBtn.active(data-id= shell.get("uuid"))= shell.getCurrentCommandTitle()
+            button.close(data-id= shell.get("uuid")) &times;
         else
           li.btn.shellBtn(data-id= shell.get("uuid"))= shell.getCurrentCommandTitle()
+            button.close(data-id= shell.get("uuid")) &times;
       li.btn.addShell +

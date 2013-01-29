@@ -19,9 +19,9 @@ module.exports.prototype.toJSON = function(){
   }
 }
 
-module.exports.prototype.terminate = function(archconsole){
+module.exports.prototype.terminate = function(){
   if(this.runningCommand)
-    this.runningCommand.terminate(archconsole);
+    this.runningCommand.terminate(true);
   this.runningCommand = null;
 }
 

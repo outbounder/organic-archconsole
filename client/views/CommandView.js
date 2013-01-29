@@ -1,5 +1,4 @@
 var CommandAutocompleteView = require("./CommandAutocompleteView");
-var ShellBtnView = require("./ShellBtnView");
 
 module.exports = Backbone.View.extend({
   readonlyInput: jadeCompile(require("../templates/readonlyInput.jade.raw")),

@@ -45,7 +45,8 @@ module.exports.prototype.start = function(){
   self.stderr = self.childProcess.stderr;
 }
 
-module.exports.prototype.terminate = function(){
+module.exports.prototype.terminate = function(silent){
+  this.childTerminateSiled = silent;
   if(this.childProcess)
     this.childProcess.kill();
   this.childProcess = null;

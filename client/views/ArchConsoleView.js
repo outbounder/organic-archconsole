@@ -7,7 +7,8 @@ module.exports = Backbone.View.extend({
 
   events: {
     "click .addShell": "createNewShell",
-    "click .shellBtn": "switchToShell"
+    "click .shellBtn": "switchToShell",
+    "click li .close": "closeShell"
   },
   
   initialize: function(options){
@@ -50,6 +51,26 @@ module.exports = Backbone.View.extend({
         this.currentShellView.render();
         $(".shellBtns li").removeClass("active");
         $(e.currentTarget).addClass("active");
+        this.updateStatusbar();
+      }
+  },
+  closeShell: function(e){
+    var shellUUID = $(e.currentTarget).attr("data-id");
+    for(var i = 0; i<this.shells.length; i++)
+      if(this.shells[i].get("uuid") == shellUUID) {
+        archconsole.emit("DELETE /shells/remove", shellUUID);
+        this.shells.splice(i, 1);
+        this.shellViews.splice(i, 1);
+        if(i >= this.shells.length)
+          i = this.shells.length - 1;
+        if(i >= 0) {
+          this.currentShell = this.shells[i];
+          this.currentShellView = this.shellViews[i];
+          this.currentShellView.render();
+        } else 
+          this.createNewShell();
+        this.updateMenu();
+        this.updateStatusbar();
       }
   },
   updateStatusbar: function(){

@@ -74,6 +74,7 @@ module.exports = function(config){
           });
 
           command.childProcess.on("close", function(code, signal){
+            if(command.childTerminateSiled) return;
             socket.emit(command.shelluuid+"/"+command.uuid+"/terminated", {
               uuid: command.uuid,
               code: code

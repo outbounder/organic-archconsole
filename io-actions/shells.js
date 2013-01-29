@@ -28,9 +28,9 @@ module.exports = function(config){
       }
 
       shell.terminate();
-      runtime.shell.removeByUUID(data);
+      runtime.shells.removeByUUID(data);
 
-      callback(true);
+      if(callback) callback(true);
     },
     "GET /autocomplete": function(data, callback){
       var shells = runtime.shells.findByUUID(data.uuid);
