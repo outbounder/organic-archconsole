@@ -17,9 +17,17 @@ module.exports = Backbone.View.extend({
     $(window).bind("keydown", this.globalKeyDown.bind(this));
   },
   globalKeyDown: function(e){
+    var self = this;
     if(e.shiftKey && e.ctrlKey && e.keyCode == 67) { // SHIFT+CTRL+C
       e.preventDefault();
       archconsole.emit("POST /commands/terminate", this.currentShellView.currentCommand.toJSON());
+    }
+    if(e.shiftKey && e.ctrlKey && e.keyCode == 13) { // SHIFT+CTRL+ENTER
+      var cmd = this.currentShellView.currentCommand.toJSON();
+      archconsole.emit("POST /commands/terminate", cmd, function(){
+        self.currentShellView.commandView.$("input").val(cmd.value);
+        self.currentShellView.commandView.executeCommand();
+      }); 
     }
   },
   createNewShell: function(){

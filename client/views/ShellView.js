@@ -10,9 +10,7 @@ module.exports = Backbone.View.extend({
     this.$el.append(this.commandView.render().el);
     this.commandViews.push(this.commandView);
     this.currentCommand = this.commandView.model;
-    $('html, body').animate({
-       scrollTop: $(document).height()
-    }, 500);
+    window.scrollTo(0, document.body.scrollHeight);
     this.commandView.$el.find("input").focus();
   },
   render: function(){
@@ -22,9 +20,7 @@ module.exports = Backbone.View.extend({
       if(i == this.commandViews.length-1)
         this.commandViews[i].delegateEvents();
     }
-    $('html, body').animate({
-       scrollTop: $(document).height()
-    }, 500);
+    window.scrollTo(0, document.body.scrollHeight);
     return this;
   }
 });

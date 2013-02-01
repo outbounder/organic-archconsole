@@ -29,11 +29,10 @@ module.exports = Backbone.View.extend({
       self.autocompleteView.baseTop = self.$el.position().top;
     });
   },
-  executeCommand: function(cwd){
+  executeCommand: function(){
     var commandData = {
       shelluuid: this.model.get('shelluuid'),
-      value: this.$("input").val(),
-      cwd: cwd
+      value: this.$("input").val()
     }
     this.$("input").replaceWith(this.readonlyInput(commandData));
     this.$(".output").removeClass("hidden");
@@ -126,9 +125,7 @@ module.exports = Backbone.View.extend({
     archconsole.removeListener(this.commandExecuteTerminatedEvent, this.handleCommandTermianted);
     this.trigger("finished");
     this.unbind();
-    $('html, body').animate({
-       scrollTop: $(document).height()
-    }, 500);
+    window.scrollTo(0, document.body.scrollHeight);
   },
   render: function(){
     this.$el.html(require("../templates/command.jade")); 

@@ -90,6 +90,7 @@ module.exports = function(config){
       command.terminate();
       runtime.commands.removeByUUID(command.uuid);
       socket.emit(command.shelluuid+"/"+command.uuid+"/terminated", command.uuid);
+      if(callback) callback();
     }
   }
 }
