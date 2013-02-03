@@ -7,11 +7,19 @@ module.exports = Backbone.View.extend({
   createNewCommand : function(){
     this.commandView = new CommandView({model: this.model.createNewCommand()});
     this.commandView.on("finished", this.createNewCommand, this);
-    this.$el.append(this.commandView.render().el);
+    
+    if(this.visible) // append only if visible
+      this.$el.append(this.commandView.render().el);
+
     this.commandViews.push(this.commandView);
     this.currentCommand = this.commandView.model;
     window.scrollTo(0, document.body.scrollHeight);
     this.commandView.$el.find("input").focus();
+
+    // prevent too long history
+    if(this.commandViews.length > 100) {
+      this.commandViews = this.commandViews.splice(1,99);
+    }
   },
   render: function(){
     this.$el.html("");

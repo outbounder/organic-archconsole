@@ -44,6 +44,9 @@ module.exports = Backbone.View.extend({
       self.shells.push(shell);
 
       self.currentShellView = new ShellView({model: shell, el: $(".shellContainer")});
+      for(var i = 0; i<self.shells.length; i++)
+        self.shells[i].visible = false;
+      self.currentShellView.visible = true;
       self.shellViews.push(self.currentShellView);
       self.render();
 
@@ -52,11 +55,15 @@ module.exports = Backbone.View.extend({
   },
   switchToShell: function(e){
     var shellUUID = $(e.currentTarget).attr("data-id");
+    
     for(var i = 0; i<this.shells.length; i++)
       if(this.shells[i].get("uuid") == shellUUID) {
         this.currentShell = this.shells[i];
         this.currentShellView = this.shellViews[i];
         this.currentShellView.render();
+        for(var i = 0; i<this.shells.length; i++)
+          this.shells[i].visible = false;
+        this.currentShellView.visible = true;
         $(".shellBtns li").removeClass("active");
         $(e.currentTarget).addClass("active");
         this.updateStatusbar();
