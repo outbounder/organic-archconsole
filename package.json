@@ -3,13 +3,13 @@
   "name": "archconsole",
   "version": "0.0.1",
   "dependencies": {
-    "organic":"0.0.8",
-    "organic-webcell": "0.1.6",
-    "organic-cells": "0.0.8",
-    "underscore": "latest",
-    "glob": "latest",
-    "async": "latest",
-    "shelljs": "latest"
+    "organic":"0.0.10",
+    "organic-webcell": "0.1.7",
+    "organic-cells": "0.0.10",
+    "underscore": "1.4.4",
+    "glob": "3.1.14",
+    "async": "0.1.22",
+    "shelljs": "0.1.2"
   },
   "devDependencies": {},
   "optionalDependencies": {},
