@@ -66,7 +66,10 @@ module.exports = function(config){
         command.uuid, code: 0}); } else {   command.start();
     
           command.stdout.on("data", function(data){
-            socket.emit(command.shelluuid+"/"+command.uuid+"/output", format.escapeUnixText(data));
+            if(data.toString().indexOf("<iframe") !== -1)
+              socket.emit(command.shelluuid+"/"+command.uuid+"/output", data.toString());
+            else
+              socket.emit(command.shelluuid+"/"+command.uuid+"/output", format.escapeUnixText(data));
           });
 
           command.stderr.on("data", function(chunk){

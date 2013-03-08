@@ -2,6 +2,9 @@ var CommandAutocompleteView = require("./CommandAutocompleteView");
 
 module.exports = Backbone.View.extend({
   readonlyInput: jadeCompile(require("../templates/readonlyInput.jade.raw")),
+  iframeWrapper: jadeCompile(require("../templates/iframeWrapper.jade.raw")),
+  commandOutput: jadeCompile(require("../templates/commandOutput.jade.raw")),
+
   events: {
     "keydown :input": "keydown"
   },
@@ -112,17 +115,37 @@ module.exports = Backbone.View.extend({
     } 
   },
   handleCommandOutput : function(data){
-    this.$("."+this.model.get("uuid")).append(data);
+    if(data.indexOf("<iframe") !== -1 && data.indexOf("</iframe>") !== -1) {
+      this.fullScreenMode = true;
+      this.$el.html(this.iframeWrapper({content: data}));  // just as experiment
+    } else {
+      var $output = this.$("."+this.model.get("uuid"));
+      if($output.length) {
+        this.outputBuffer += data;
+        $output.append(data);
+      } else
+        this.outputBuffer += data;
+    }
     window.scrollTo(0, document.body.scrollHeight);
   },
   handleCommandTermianted: function(data){
     this.model.set("running", false);
+    if(this.fullScreenMode) { // still from the experiment
+      this.$el.find("iframe").remove(); 
+      this.$el.html(this.commandOutput({
+        input: this.model.get("value"),
+        output: this.outputBuffer
+      }));
+    }
+
     if(data.code == 0)
       this.$(".status").addClass("alert-success");
     else
       this.$(".status").addClass("alert-error");
+    
     archconsole.removeListener(this.handleCommandOutputEvent, this.handleCommandOutput);
     archconsole.removeListener(this.commandExecuteTerminatedEvent, this.handleCommandTermianted);
+    
     this.trigger("finished");
     this.unbind();
     window.scrollTo(0, document.body.scrollHeight);
