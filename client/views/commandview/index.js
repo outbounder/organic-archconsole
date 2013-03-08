@@ -1,9 +1,9 @@
-var CommandAutocompleteView = require("./CommandAutocompleteView");
+var CommandAutocompleteView = require("./autocomplete");
 
 module.exports = Backbone.View.extend({
-  readonlyInput: jadeCompile(require("../templates/readonlyInput.jade.raw")),
-  iframeWrapper: jadeCompile(require("../templates/iframeWrapper.jade.raw")),
-  commandOutput: jadeCompile(require("../templates/commandOutput.jade.raw")),
+  readonlyInput: jadeCompile(require("../../templates/readonlyInput.jade.raw")),
+  iframeWrapper: jadeCompile(require("../../templates/iframeWrapper.jade.raw")),
+  commandOutput: jadeCompile(require("../../templates/commandOutput.jade.raw")),
 
   events: {
     "keydown :input": "keydown"
@@ -151,7 +151,7 @@ module.exports = Backbone.View.extend({
     window.scrollTo(0, document.body.scrollHeight);
   },
   render: function(){
-    this.$el.html(require("../templates/command.jade")); 
+    this.$el.html(require("./index.jade")); 
     this.$("input").focus();
     return this;
   }

@@ -1,4 +1,4 @@
-var CommandView = require("./CommandView");
+var CommandView = require("./commandview");
 
 module.exports = Backbone.View.extend({
   initialize: function(){

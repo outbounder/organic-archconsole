@@ -1,7 +1,7 @@
 module.exports = Backbone.View.extend({
   className: "autocompleteItems",
-  template: jadeCompile(require("../templates/CommandAutocomplete.jade.raw")),
-  autocompleteItem: jadeCompile(require("../templates/CommandAutocompleteItem.jade.raw")),
+  template: jadeCompile(require("./index.jade.raw")),
+  autocompleteItem: jadeCompile(require("./item.jade.raw")),
   selectFirst: function(){
     this.currentAutocompleteItemIndex = 0;
     this.$("li").removeClass("active");
