@@ -1,9 +1,9 @@
 var CommandAutocompleteView = require("./autocomplete");
 
 module.exports = Backbone.View.extend({
-  readonlyInput: jadeCompile(require("../../templates/readonlyInput.jade.raw")),
-  iframeWrapper: jadeCompile(require("../../templates/iframeWrapper.jade.raw")),
-  commandOutput: jadeCompile(require("../../templates/commandOutput.jade.raw")),
+  readonlyInput: jadeCompile(require("./readonlyInput.jade.raw")),
+  iframeWrapper: jadeCompile(require("./iframeWrapper.jade.raw")),
+  commandOutput: jadeCompile(require("./output.jade.raw")),
 
   events: {
     "keydown :input": "keydown"
