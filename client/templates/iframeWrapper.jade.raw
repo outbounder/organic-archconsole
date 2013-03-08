@@ -1,2 +1,2 @@
-.row-fluid
-  .span12!= content
+.command
+  .row-fluid!= content
