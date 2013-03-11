@@ -3,8 +3,8 @@
 
 # How to install #
 
-Copy files from zip archive to `target` directory.
-
+fork the repo
+$ npm git clone yourFork `target`
 $ cd `target`
 $ npm install
 
@@ -29,4 +29,4 @@ $ angel Cell restart archconsole.js
 
 # How to use #
 
-start && open http://localhost:3333/
+1) start && 2) open http://localhost:3333/ 3) input unix command
