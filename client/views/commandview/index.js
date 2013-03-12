@@ -1,6 +1,7 @@
 var CommandAutocompleteView = require("./autocomplete");
 
 module.exports = Backbone.View.extend({
+  template: jadeCompile(require("./index.jade")),
   readonlyInput: jadeCompile(require("./readonlyInput.jade.raw")),
   iframeWrapper: jadeCompile(require("./iframeWrapper.jade.raw")),
   commandOutput: jadeCompile(require("./output.jade.raw")),
@@ -151,7 +152,7 @@ module.exports = Backbone.View.extend({
     window.scrollTo(0, document.body.scrollHeight);
   },
   render: function(){
-    this.$el.html(require("./index.jade")); 
+    this.$el.html(this.template()); 
     this.$("input").focus();
     return this;
   }

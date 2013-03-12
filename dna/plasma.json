@@ -3,7 +3,10 @@
     "source": "node_modules/organic-webcell/plasma/BundleCode",
     "useCache": true,
     "debug": true,
-    "uglify": true
+    "uglify": true,
+    "plugins": [{
+      "source": "/client-plugins/ClientConfigAndTemplates"
+    }]
   },
   "RenderPage": {
     "source": "node_modules/organic-webcell/plasma/RenderPage",
@@ -12,11 +15,8 @@
   "BundleStyle": {
     "source": "node_modules/organic-webcell/plasma/BundleStyle"
   },
-  "ErrorHandler": {
-    "source": "node_modules/organic-webcell/plasma/ErrorHandler"
-  },
   "SocketIOActions": {
-    "source": "plasma/SocketIOActions",
+    "source": "node_modules/organic-webcell/plasma/SocketIOActions",
     "cwd": {
       "actions": "/io-actions"
     }
@@ -29,6 +29,7 @@
   },
   "Self": {
     "source": "node_modules/organic-cells/plasma/Self",
-    "tissue": "archconsole"
+    "tissue": "archconsole",
+    "surviveExceptions": true
   }
 }

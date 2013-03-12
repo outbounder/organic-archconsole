@@ -1,4 +1,9 @@
 {
+  "Logger": {
+    "source": "node_modules/organic-webcell/membrane/Logger",
+    "listenUncaughtExceptions": true,
+    "prefixConsoleWithTimestamps": true
+  },
   "HttpServer": {
     "source": "node_modules/organic-webcell/membrane/ExpressHttpServer",
     "port": 3333,
