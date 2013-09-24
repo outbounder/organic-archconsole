@@ -65,7 +65,15 @@ module.exports = function(config){
       if(command.value.indexOf("pwd") === 0) {
         socket.emit(command.shelluuid+"/"+command.uuid+"/output", shell.cwd);
         socket.emit(command.shelluuid+"/"+command.uuid+"/terminated", {uuid:
-        command.uuid, code: 0}); } else {   command.start();
+        command.uuid, code: 0}); 
+      } else 
+      if(command.value === "s") {
+        socket.emit(command.shelluuid+"/"+command.uuid+"/output", "<button>run alt+r</button>");
+        socket.emit(command.shelluuid+"/"+command.uuid+"/terminated", {uuid:
+        command.uuid, code: 0}); 
+      } else {   
+
+          command.start();
     
           command.stdout.on("data", function(data){
             if(data.toString().indexOf("<iframe") !== -1)
