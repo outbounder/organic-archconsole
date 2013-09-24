@@ -3,18 +3,6 @@
     "source": "node_modules/organic-jadefy",
     "exportsGlobal": "jadefy"
   },
-  "BundleCode": {
-    "source": "node_modules/organic-bundlecode",
-    "useCache": true,
-    "debug": true,
-    "uglify": true,
-    "plugins": [{
-      "source": "/client-plugins/ClientConfigAndTemplates"
-    }]
-  },
-  "BundleStyle": {
-    "source": "node_modules/organic-bundlestyle"
-  },
   "SocketIOActions": {
     "source": "node_modules/organic-socketioActions",
     "cwd": {

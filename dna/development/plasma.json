@@ -1,10 +1,42 @@
 {
   "BundleCode": {
+    "source": "node_modules/organic-bundlecode",
     "useCache": false,
     "debug": true,
-    "uglify": false
+    "uglify": false,
+    "plugins": ["plasma/bundlecode-plugins/Config","plasma/bundlecode-plugins/Jade"]
+  },
+  "BundleStyle": {
+    "source": "node_modules/organic-bundlestyle"
   },
   "SocketIOActions": {
     "log": true
+  },
+  "HttpReactor": {
+    "endReactions": [
+      {
+        "source": "plasma/http-reactions/bundle",
+        "emit": {
+          "type": "BundleCode"
+        },
+        "root": "context/ui/apps",
+        "extname": ".js",
+        "headers": {
+          "content-type": "text/javascript"
+        },
+        "pipe": true
+      },
+      {
+        "source": "plasma/http-reactions/bundle",
+        "emit": {
+          "type": "BundleStyle"
+        },
+        "root": "context/ui/style",
+        "extname": ".less",
+        "headers": {
+          "content-type": "text/stylesheet"
+        }
+      }
+    ]
   }
 }

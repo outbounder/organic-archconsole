@@ -10,7 +10,8 @@
     "underscore": "1.4.4",
     "glob": "3.1.14",
     "async": "0.1.22",
-    "shelljs": "0.1.2"
+    "shelljs": "0.1.2",
+    "jade": "0.35.0"
   },
   "devDependencies": {
     "organic-httpServer": "0.0.1",
