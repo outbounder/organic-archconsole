@@ -1,6 +1,10 @@
 {
+  "Jadefy": {
+    "source": "node_modules/organic-jadefy",
+    "exportsGlobal": "jadefy"
+  },
   "BundleCode": {
-    "source": "node_modules/organic-webcell/plasma/BundleCode",
+    "source": "node_modules/organic-bundlecode",
     "useCache": true,
     "debug": true,
     "uglify": true,
@@ -8,24 +12,35 @@
       "source": "/client-plugins/ClientConfigAndTemplates"
     }]
   },
-  "RenderPage": {
-    "source": "node_modules/organic-webcell/plasma/RenderPage",
-    "useCache": true
-  },
   "BundleStyle": {
-    "source": "node_modules/organic-webcell/plasma/BundleStyle"
+    "source": "node_modules/organic-bundlestyle"
   },
   "SocketIOActions": {
-    "source": "node_modules/organic-webcell/plasma/SocketIOActions",
+    "source": "node_modules/organic-socketioActions",
     "cwd": {
       "actions": "/io-actions"
     }
   },
-  "ExpressHttpPages": {
-    "source": "node_modules/organic-webcell/plasma/ExpressHttpPages",
-    "cwd": {
-      "pages": "/pages"
-    }
+  "HttpReactor": {
+    "source": "node_modules/organic-httpReactor",
+    "reactions": {
+      "root": "context/http/reactions",
+      "extname": ".js",
+      "indexname": "index"
+    },
+    "capture": {
+      "type": "HttpRequest"
+    },
+    "startReactions": [
+      "node_modules/connect/lib/middleware/cookieParser",
+      { 
+        "source": "node_modules/connect/lib/middleware/static", 
+        "arguments": ["public/"]
+      },{ 
+        "source": "node_modules/connect/lib/middleware/static", 
+        "arguments": ["context/ui/style/"]
+      }
+    ]
   },
   "Self": {
     "source": "node_modules/organic-cells/plasma/Self",

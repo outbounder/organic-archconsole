@@ -12,7 +12,18 @@ jadeCompile = function(path){
 runtime = {};
 
 var User = require("../client/models/User");
-var Router = require("../client/IndexRouter");
+var Router = Backbone.Router.extend({
+
+  routes: {
+    "": "landing"
+  },
+
+  landing: function(){
+    var view = new ArchConsoleView({model: runtime.user, el: $(".container")});
+    runtime.archconsoleView = view;
+    view.createNewShell();
+  }
+})
 
 archconsole = io.connect();
 archconsole.emit("GET /user", {}, function(data){
@@ -20,3 +31,5 @@ archconsole.emit("GET /user", {}, function(data){
   runtime.router = new Router();
   Backbone.history.start({pushState: false, trigger: true});
 });
+
+var ArchConsoleView = require("./views/ArchConsoleView");
