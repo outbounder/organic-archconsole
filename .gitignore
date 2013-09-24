@@ -1,4 +1,4 @@
 node_modules
-archconsole.js.err
-archconsole.js.out
+*.err
+*.out
 build
