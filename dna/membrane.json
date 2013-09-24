@@ -6,7 +6,7 @@
   },
   "HttpServer": {
     "source": "node_modules/organic-httpServer",
-    "port": 3000,
+    "port": 3333,
     "emit": {
       "ready": "HttpServer",
       "request": "HttpRequest"

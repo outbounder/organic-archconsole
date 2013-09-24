@@ -1,5 +1,6 @@
 {
   "HttpServer": {
-    "log": true
+    "log": true,
+    "port": 3000
   }
 }
