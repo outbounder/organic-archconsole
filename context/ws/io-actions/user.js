@@ -1,4 +1,4 @@
-var runtime = require("../models/runtime");
+var runtime = require("models/server/runtime");
 
 module.exports = function(config){
   return {

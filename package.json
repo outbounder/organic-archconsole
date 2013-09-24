@@ -22,8 +22,8 @@
     "organic-bundleStyle": "0.0.1",
     "organic-bundleCode": "0.0.1",
     "organic-jadefy": "0.0.1",
-    "organic-logger": "0.0.1"
-    
+    "organic-logger": "0.0.1",
+    "organic-symlink": "0.0.1"
   },
   "optionalDependencies": {},
   "engines": {

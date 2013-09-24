@@ -1,5 +1,7 @@
-var Shell = require("../models/Shell");
-var runtime = require("../models/runtime");
+var path = require('path')
+var runtime = require("models/server/runtime");
+var Shell = require("models/server/Shell");
+
 
 var id = 0;
 var uuid = function () {
@@ -7,7 +9,7 @@ var uuid = function () {
 }
 
 module.exports = function(config){
-  var archpackage = require("../package.json");
+  var archpackage = require(path.join(process.cwd(),"package.json"));
   return {
     "POST /create": function(data, callback){
       var shell = new Shell(data);

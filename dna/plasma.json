@@ -6,7 +6,7 @@
   "SocketIOActions": {
     "source": "node_modules/organic-socketioActions",
     "cwd": {
-      "actions": "/io-actions"
+      "actions": "/context/ws/io-actions"
     }
   },
   "HttpReactor": {
@@ -34,5 +34,15 @@
     "source": "node_modules/organic-cells/plasma/Self",
     "tissue": "archconsole",
     "surviveExceptions": true
+  },
+  "Symlink": {
+    "source": "node_modules/organic-symlink",
+    "symlink": {
+      "target": {
+        "node_modules": {
+          "models": "context/models"
+        }
+      }
+    }
   }
 }

@@ -1,9 +1,9 @@
 var ShellView = require("./ShellView");
-var Shell = require("../models/Shell");
+var Shell = require("models/client/Shell");
 
 module.exports = Backbone.View.extend({
-  menu: jadeCompile(require("../templates/menu.jade.raw")),
-  statusbar: jadeCompile(require("../templates/statusbar.jade.raw")),
+  menu: require("../templates/menu.jade"),
+  statusbar: require("../templates/statusbar.jade"),
 
   events: {
     "click .addShell": "createNewShell",

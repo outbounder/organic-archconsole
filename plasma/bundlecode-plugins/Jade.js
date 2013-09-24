@@ -5,7 +5,6 @@ var jade = require("jade");
 module.exports = function(client, config) {
   client.bundle.transform(function(file){
     if (!/\.jade$/.test(file)) return client.through();
-
     var buffer = "";
 
     return client.through(function(chunk) {

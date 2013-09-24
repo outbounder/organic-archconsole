@@ -1,17 +1,9 @@
-require("../client/vendor");
-
-jadeCompile = function(path){
-  var compiled = jade.compile(path);
-  return function(data) {
-    data = data || {};
-    data.t = $.t;
-    return compiled(data);
-  }
-};
+require("./vendor");
+config = require("config")
 
 runtime = {};
 
-var User = require("../client/models/User");
+var User = require("models/client/User");
 var Router = Backbone.Router.extend({
 
   routes: {
@@ -25,7 +17,7 @@ var Router = Backbone.Router.extend({
   }
 })
 
-archconsole = io.connect();
+archconsole = io.connect(config.endpoint);
 archconsole.emit("GET /user", {}, function(data){
   runtime.user = new User(data);
   runtime.router = new Router();

@@ -1,16 +1,13 @@
 {
   "BundleCode": {
     "source": "node_modules/organic-bundlecode",
-    "useCache": false,
-    "debug": true,
+    "useCache": true,
+    "debug": false,
     "uglify": false,
     "plugins": ["plasma/bundlecode-plugins/Config","plasma/bundlecode-plugins/Jade"]
   },
   "BundleStyle": {
     "source": "node_modules/organic-bundlestyle"
-  },
-  "SocketIOActions": {
-    "log": true
   },
   "HttpReactor": {
     "endReactions": [

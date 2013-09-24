@@ -1,9 +1,11 @@
-var CommandResult = require("../models/CommandResult");
-var Command = require("../models/Command");
-var runtime = require("../models/runtime");
 var path = require("path");
 var fs = require("fs");
-var Format = require("../models/OutputFormat");
+
+var runtime = require("models/server/runtime");
+
+var CommandResult = require("models/server/CommandResult");
+var Command = require("models/server/Command");
+var Format = require("models/server/OutputFormat");
 
 var id = 0;
 var uuid = function () {
