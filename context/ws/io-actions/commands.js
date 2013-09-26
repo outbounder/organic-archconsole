@@ -6,6 +6,7 @@ var runtime = require("models/server/runtime");
 var CommandResult = require("models/server/CommandResult");
 var Command = require("models/server/Command");
 var Format = require("models/server/OutputFormat");
+var LocalCommands = require("models/server/LocalCommands");
 
 var id = 0;
 var uuid = function () {
@@ -18,6 +19,35 @@ function getUserHome() {
 
 module.exports = function(config){
   var format = new Format();
+  var localCommands = new LocalCommands()
+  localCommands.load({root: path.join(process.cwd(), "bin")})
+
+  var startCommand = function(command, socket, subCommand) {
+    command.start();
+    
+    command.stdout.on("data", function(data){
+      if(data.toString().indexOf("<iframe") !== -1)
+        socket.emit(command.shelluuid+"/"+command.uuid+"/output", data.toString());
+      else
+        socket.emit(command.shelluuid+"/"+command.uuid+"/output", format.escapeUnixText(data));
+    });
+
+    command.stderr.on("data", function(chunk){
+      socket.emit(command.shelluuid+"/"+command.uuid+"/output", format.escapeUnixText(chunk));
+    });
+
+    command.childProcess.on("close", function(code, signal){
+      if(command.childTerminateSiled) return;
+      if(!subCommand)
+        socket.emit(command.shelluuid+"/"+command.uuid+"/terminated", {
+          uuid: command.uuid,
+          code: code
+        });
+      else
+        if(typeof subCommand == "function")
+          subCommand(code, command)
+    });
+  }
 
   return {
     "POST /execute": function(data, callback, socket){
@@ -67,32 +97,48 @@ module.exports = function(config){
         socket.emit(command.shelluuid+"/"+command.uuid+"/terminated", {uuid:
         command.uuid, code: 0}); 
       } else 
-      if(command.value === "s") {
-        socket.emit(command.shelluuid+"/"+command.uuid+"/output", "<button>run alt+r</button>");
-        socket.emit(command.shelluuid+"/"+command.uuid+"/terminated", {uuid:
-        command.uuid, code: 0}); 
+      if(localCommands.findByName(command.value)) {
+        var eventListeners = []
+        var registerEventListener = function(eventName, handler) {
+          eventListeners.push({eventName: eventName, handler: handler})
+          socket.on(eventName, handler)
+        }
+        var removeAllListeners = function(){
+          eventListeners.forEach(function(listener){
+            socket.removeListener(listener.eventName, listener.handler)
+          })
+          eventListeners = []
+        }
+        localCommands.executeByName(command.value, {
+          command: command,
+          socket: socket,
+          output: function(value){
+            socket.emit(command.shelluuid+"/"+command.uuid+"/output", value);    
+          },
+          terminate: function(){
+            socket.emit(command.shelluuid+"/"+command.uuid+"/terminated", {uuid: command.uuid, code: 0});     
+          },
+          bindKeyOnce: function(keySequence, cmd, handler) {
+            var eventName = command.shelluuid+"/"+command.uuid+"/trigger/"+keySequence
+            registerEventListener(eventName, function(){
+              removeAllListeners()
+              if(typeof cmd == "string") {
+                var subCommand = new Command({value: cmd});
+                subCommand.shell = shell;
+                subCommand.shelluuid = command.shelluuid;
+                subCommand.uuid = command.uuid;
+                subCommand.cwd = command.cwd;
+                startCommand(subCommand, socket, handler)
+              }
+              if(typeof cmd == "function") {
+                cmd()
+              }
+            })
+            socket.emit(command.shelluuid+"/"+command.uuid+"/bindkeyonce", {keySequence: keySequence});     
+          }
+        })
       } else {   
-
-          command.start();
-    
-          command.stdout.on("data", function(data){
-            if(data.toString().indexOf("<iframe") !== -1)
-              socket.emit(command.shelluuid+"/"+command.uuid+"/output", data.toString());
-            else
-              socket.emit(command.shelluuid+"/"+command.uuid+"/output", format.escapeUnixText(data));
-          });
-
-          command.stderr.on("data", function(chunk){
-            socket.emit(command.shelluuid+"/"+command.uuid+"/output", format.escapeUnixText(chunk));
-          });
-
-          command.childProcess.on("close", function(code, signal){
-            if(command.childTerminateSiled) return;
-            socket.emit(command.shelluuid+"/"+command.uuid+"/terminated", {
-              uuid: command.uuid,
-              code: code
-            });
-          });
+        startCommand(command, socket)
       }
     },
     "POST /terminate": function(data, callback, socket){

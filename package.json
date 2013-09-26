@@ -1,6 +1,7 @@
 {
   "author": "Boris Filipov",
   "name": "organic-archconsole",
+  "main": "archconsole.js",
   "version": "0.0.2",
   "dependencies": {
     "organic":"0.1.1",
@@ -14,13 +15,17 @@
     "jade": "0.35.0"
   },
   "devDependencies": {
-    "organic-httpServer": "0.0.1",
-    "organic-httpReactor": "0.0.1",
-    "organic-alchemy": "0.0.1",
-    "organic-socketioServer": "0.0.1",
-    "organic-socketioReactor": "0.0.1",
-    "organic-bundleStyle": "0.0.1",
-    "organic-bundleCode": "0.0.1",
+    "organic-alchemy": "0.0.0",
+
+    "organic-httpserver": "0.0.1",
+    "organic-httpreactor": "0.0.1",
+    
+    "organic-socketioserver": "0.0.1",
+    "organic-socketioactions": "0.0.1",
+
+    "organic-bundlestyle": "0.0.1",
+    "organic-bundlecode": "0.0.3",
+    
     "organic-jadefy": "0.0.1",
     "organic-logger": "0.0.1",
     "organic-symlink": "0.0.1"

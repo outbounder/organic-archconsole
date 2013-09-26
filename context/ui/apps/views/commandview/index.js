@@ -11,6 +11,7 @@ module.exports = Backbone.View.extend({
   },
   initialize: function(){
     this.curCommand = this.model;
+    this._keycomboListeners = []
   },
   autocomplete: function(){
     var self = this;
@@ -50,14 +51,21 @@ module.exports = Backbone.View.extend({
       self.model.set(data);
       self.$(".result").addClass(self.model.get("uuid"));
       self.$el.attr("data-id", self.model.get("uuid"));
+
       self.handleCommandOutputEvent = self.model.get("shelluuid")+"/"+self.model.get("uuid")+"/output";
       self.commandExecuteTerminatedEvent = self.model.get("shelluuid")+"/"+self.model.get("uuid")+"/terminated";
+      self.commandBindKeyOnceEvent = self.model.get("shelluuid")+"/"+self.model.get("uuid")+"/bindkeyonce";
+      self.commandTriggerKeySequence = self.model.get("shelluuid")+"/"+self.model.get("uuid")+"/trigger/";
+
       archconsole.on(self.handleCommandOutputEvent, function(data){
         self.handleCommandOutput(data);
       });
       archconsole.on(self.commandExecuteTerminatedEvent, function(data){
         self.handleCommandTermianted(data)
       });
+      archconsole.on(self.commandBindKeyOnceEvent, function(data){
+        self.handleCommandBindKeyOnce(data)
+      })
     });
   },
   keydown: function(e){
@@ -129,6 +137,22 @@ module.exports = Backbone.View.extend({
     }
     window.scrollTo(0, document.body.scrollHeight);
   },
+  handleCommandBindKeyOnce: function(data){
+    var self = this;
+    self.registerKeyCombo(KeyboardJS.on(data.keySequence, function(){
+      self.clearAllKeycombos()
+      archconsole.emit(self.commandTriggerKeySequence+data.keySequence)
+    }))
+  },
+  registerKeyCombo: function(listener) {
+    this._keycomboListeners.push(listener)
+  },
+  clearAllKeycombos: function(){
+    this._keycomboListeners.forEach(function(listener){
+      listener.clear()
+    })
+    this._keycomboListeners = []
+  },
   handleCommandTermianted: function(data){
     this.model.set("running", false);
     if(this.fullScreenMode) { // still from the experiment
@@ -146,6 +170,7 @@ module.exports = Backbone.View.extend({
     
     archconsole.removeListener(this.handleCommandOutputEvent, this.handleCommandOutput);
     archconsole.removeListener(this.commandExecuteTerminatedEvent, this.handleCommandTermianted);
+    archconsole.removeListener(this.commandBindKeyOnceEvent, this.handleCommandBindKeyOnce)
     
     this.trigger("finished");
     this.unbind();

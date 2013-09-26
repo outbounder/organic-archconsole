@@ -4,13 +4,13 @@
     "exportsGlobal": "jadefy"
   },
   "SocketIOActions": {
-    "source": "node_modules/organic-socketioActions",
+    "source": "node_modules/organic-socketioactions",
     "cwd": {
       "actions": "/context/ws/io-actions"
     }
   },
   "HttpReactor": {
-    "source": "node_modules/organic-httpReactor",
+    "source": "node_modules/organic-httpreactor",
     "reactions": {
       "root": "context/http/reactions",
       "extname": ".js",

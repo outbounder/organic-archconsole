@@ -4,3 +4,5 @@ _ = require("./underscore");
 Backbone = require("./backbone");
 
 require("./bootstrap.min");
+
+require("./keyboardjs")

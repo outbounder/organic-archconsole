@@ -34,6 +34,7 @@ module.exports.prototype.start = function(){
     self.value.indexOf(";") !== -1 ||
     self.value.indexOf('"') !== -1 ||
     self.value.indexOf('>') !== -1;
+
   if(!shellCmd && process.platform != "win32") { // TODO win == false
     var args = self.value.split(" ");
     var cmd = args.shift();

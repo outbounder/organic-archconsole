@@ -5,7 +5,7 @@
     "prefixConsoleWithTimestamps": true
   },
   "HttpServer": {
-    "source": "node_modules/organic-httpServer",
+    "source": "node_modules/organic-httpserver",
     "port": 3333,
     "emit": {
       "ready": "HttpServer",
@@ -13,7 +13,7 @@
     }
   },
   "WebSocketServer": {
-    "source": "node_modules/organic-socketioServer",
+    "source": "node_modules/organic-socketioserver",
     "attachToChemical": "HttpServer"
   },
   "Tissue": {
