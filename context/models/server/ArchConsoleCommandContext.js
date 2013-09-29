@@ -1,36 +1,29 @@
-module.exports = function(socket, command){
-  var eventListeners = []
-  var registerEventListener = function(eventName, handler) {
-    eventListeners.push({eventName: eventName, handler: handler})
-    socket.on(eventName, handler)
-  }
-  var removeAllListeners = function(){
-    eventListeners.forEach(function(listener){
-      socket.removeListener(listener.eventName, listener.handler)
-    })
-    eventListeners = []
-  }
-  return {
-    command: command,
-    socket: socket,
+var _ = require("underscore")
+
+module.exports = function(c){
+  var commands = require("../../ws/reactions/commands")
+  var socket = c.socket
+  var command = c.command
+  
+  return _.extend({
     output: function(value){
-      socket.emit(command.shelluuid+"/"+command.uuid+"/output", value);    
+      socket.emit("/commands/output",{uuid: command.uuid, value: value});    
     },
     terminate: function(){
-      socket.emit(command.shelluuid+"/"+command.uuid+"/terminated", {uuid: command.uuid, code: 0});     
+      socket.emit("/commands/terminated", {uuid: command.uuid, code: 0});     
     },
     bindKeyOnce: function(keySequence, cmd, handler) {
-      var eventName = command.shelluuid+"/"+command.uuid+"/trigger/"+keySequence
-      registerEventListener(eventName, function(){
-        removeAllListeners()
+      socket.on("/commands/trigger", function(c){
+        if(c.data != keySequence) return
         if(typeof cmd == "string") {
-          executeCommand(new Command({value: cmd, cwd: command.cwd, shelluuid: command.shelluuid}))
+          c.command.value = cmd
+          commands.execute(c, handler)
         }
         if(typeof cmd == "function") {
-          cmd()
+          cmd(c, handler)
         }
       })
-      socket.emit(command.shelluuid+"/"+command.uuid+"/bindkeyonce", {keySequence: keySequence});     
+      socket.emit("/commands/bindkeyonce", {keySequence: keySequence});
     }
-  }
+  }, c)
 }

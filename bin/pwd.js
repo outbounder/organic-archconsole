@@ -1,3 +1,7 @@
-socket.emit(command.shelluuid+"/"+command.uuid+"/output", shell.cwd);
-socket.emit(command.shelluuid+"/"+command.uuid+"/terminated", {uuid:
-command.uuid, code: 0}); 
+module.exports = function(c, next){
+  var socket = c.socket
+  var command = c.command
+  var shell = c.command.shell
+  c.output(shell.cwd);
+  c.terminate()
+}

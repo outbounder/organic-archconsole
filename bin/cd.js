@@ -1,20 +1,22 @@
 module.exports = function(c, next) {
-  var target = data.value.replace("cd ","");   
+  var target = c.command.value.replace("cd ","");   
+  var shell = c.command.shell
+  var socket = c.socket
+
   if(target.indexOf("~") === 0)     
     target = target.replace("~", getUserHome());   
   if(target.indexOf(".") === 0 || (target.indexOf("/") !== 0 && target.indexOf(":\\") !== 1))     
     target = path.normalize(path.join(shell.cwd, target));   
+  
   fs.exists(target, function(e){     
     if(e) { 
       shell.cwd = target;
-      socket.emit(command.shelluuid+"/"+command.uuid+"/output", shell.cwd);
-      socket.emit(shell.uuid+"/updated", shell.toJSON());
-      socket.emit(command.shelluuid+"/"+command.uuid+"/terminated", 
-        {uuid: command.uuid, code: 0});     
+      c.output(shell.cwd);
+      socket.emit("/shells/updated", {uuid: shell.uuid, data: shell.toJSON()});
+      c.terminate()
     } else {
-      socket.emit(command.shelluuid+"/"+command.uuid+"/output", "not found");
-      socket.emit(command.shelluuid+"/"+command.uuid+"/terminated", 
-        {uuid: command.uuid, code: 1});     
+      c.output("not found");
+      c.terminate(1)
     }   
   })
 }

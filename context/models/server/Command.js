@@ -26,21 +26,8 @@ module.exports.prototype.start = function(){
     env: self.shell.env,
     encoding: "binary"
   };
-  
-  
-  var realtimeOutput = true;
-  var shellCmd = self.value.indexOf("|") !== -1 ||
-    self.value.indexOf("&") !== -1 || 
-    self.value.indexOf(";") !== -1 ||
-    self.value.indexOf('"') !== -1 ||
-    self.value.indexOf('>') !== -1;
 
-  if(!shellCmd && process.platform != "win32") { // TODO win == false
-    var args = self.value.split(" ");
-    var cmd = args.shift();
-    self.childProcess = spawn(cmd, args, options);
-  } else
-    self.childProcess = exec(self.value, options);
+  self.childProcess = exec(self.value, options);
 
   self.stdin = self.childProcess.stdin;
   self.stdout = self.childProcess.stdout;

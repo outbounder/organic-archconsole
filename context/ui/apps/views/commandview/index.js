@@ -15,8 +15,12 @@ module.exports = Backbone.View.extend({
   },
   autocomplete: function(){
     var self = this;
-    var inputData = {uuid: this.model.get("shelluuid"), value: this.$("input").val()};
-    archconsole.emit("GET /shells/autocomplete", inputData, function(data){
+    var inputData = {
+      name: "/autocomplete",
+      uuid: this.model.get("shelluuid"), 
+      value: this.$("input").val()
+    };
+    archconsole.emit("/shells", inputData, function(data){
       self.autocompleteView = new CommandAutocompleteView({model: data});
       self.autocompleteView.on("canceled", function(){
         self.autocompleteView.remove();
@@ -37,7 +41,8 @@ module.exports = Backbone.View.extend({
   executeCommand: function(){
     var commandData = {
       shelluuid: this.model.get('shelluuid'),
-      value: this.$("input").val()
+      value: this.$("input").val(),
+      name: "/execute"
     }
     this.$("input").replaceWith(this.readonlyInput(commandData));
     this.$(".output").removeClass("hidden");
@@ -46,27 +51,31 @@ module.exports = Backbone.View.extend({
     var self = this;
     this.model.set("running", true);
 
-    archconsole.emit("POST /commands/execute", commandData, function(data){
-      if(!data.uuid) return self.handleCommandTermianted(data);
-      self.model.set(data);
-      self.$(".result").addClass(self.model.get("uuid"));
-      self.$el.attr("data-id", self.model.get("uuid"));
+    archconsole.emit("/commands", commandData)
+    archconsole.on("/shells/commandstart", function(data){ self.handleCommandStart(data) })
+  },
+  handleCommandStart: function(data){
+    data = data.value 
+    var self = this
+    if(!data.uuid) return self.handleCommandTermianted(data);
+    self.model.set(data);
+    self.$(".result").addClass(self.model.get("uuid"));
+    self.$el.attr("data-id", self.model.get("uuid"));
 
-      self.handleCommandOutputEvent = self.model.get("shelluuid")+"/"+self.model.get("uuid")+"/output";
-      self.commandExecuteTerminatedEvent = self.model.get("shelluuid")+"/"+self.model.get("uuid")+"/terminated";
-      self.commandBindKeyOnceEvent = self.model.get("shelluuid")+"/"+self.model.get("uuid")+"/bindkeyonce";
-      self.commandTriggerKeySequence = self.model.get("shelluuid")+"/"+self.model.get("uuid")+"/trigger/";
+    self.handleCommandOutputEvent = "/commands/output";
+    self.commandExecuteTerminatedEvent = "/commands/terminated";
+    self.commandBindKeyOnceEvent = "/commands/bindkeyonce";
+    self.commandTriggerKeySequence = "/commands/trigger/";
 
-      archconsole.on(self.handleCommandOutputEvent, function(data){
-        self.handleCommandOutput(data);
-      });
-      archconsole.on(self.commandExecuteTerminatedEvent, function(data){
-        self.handleCommandTermianted(data)
-      });
-      archconsole.on(self.commandBindKeyOnceEvent, function(data){
-        self.handleCommandBindKeyOnce(data)
-      })
+    archconsole.on(self.handleCommandOutputEvent, function(data){
+      self.handleCommandOutput(data.value);
     });
+    archconsole.on(self.commandExecuteTerminatedEvent, function(data){
+      self.handleCommandTermianted(data)
+    });
+    archconsole.on(self.commandBindKeyOnceEvent, function(data){
+      self.handleCommandBindKeyOnce(data)
+    })
   },
   keydown: function(e){
     var self = this;

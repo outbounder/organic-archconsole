@@ -20,6 +20,6 @@ module.exports.prototype.findByName = function(name){
   return this.commands_cache[name]
 }
 
-module.exports.prototype.executeByName = function(name, c) {
-  this.commands_cache[name](c)
+module.exports.prototype.executeByName = function(name, c, next) {
+  this.commands_cache[name](c, next)
 }

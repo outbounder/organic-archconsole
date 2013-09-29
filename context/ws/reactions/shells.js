@@ -1,6 +1,7 @@
 var path = require('path')
 var runtime = require("models/server/runtime");
 var Shell = require("models/server/Shell");
+var switchByEventname = require("organic-alchemy").ws.switchByEventname
 
 
 var id = 0;
@@ -11,8 +12,8 @@ var uuid = function () {
 module.exports.init = function(){
   var archpackage = require(path.join(process.cwd(),"package.json"));
   return switchByEventname({
-    "*/create": function(data, next){
-      var shell = new Shell(data);
+    "/create": function(c, next){
+      var shell = new Shell(c.data);
       shell.uuid = uuid();
       shell.user = runtime.user;
       shell.cwd = process.cwd();
@@ -22,24 +23,23 @@ module.exports.init = function(){
       runtime.shells.push(shell);
       next(shell.toJSON());
     },
-    "*/remove": function(data, next){
-      var shell = runtime.shells.findByUUID(data);
+    "/remove": function(c, next){
+      var shell = runtime.shells.findByUUID(c.data);
       if(!shell) {
         next(new Error("could not find shell"));
         return;
       }
 
       shell.terminate();
-      runtime.shells.removeByUUID(data);
+      runtime.shells.removeByUUID(c.data);
 
       next && next(true);
     },
-    "*/autocomplete": function(data, next){
-      var shells = runtime.shells.findByUUID(data.uuid);
+    "/autocomplete": function(c, next){
+      var shells = runtime.shells.findByUUID(c.data.uuid);
       if(!shells)
         return;
-
-      shells.autocomplete(data.value, next);
+      shells.autocomplete(c.data.value, next);
     }
   })
 }

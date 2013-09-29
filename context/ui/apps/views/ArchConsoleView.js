@@ -15,6 +15,10 @@ module.exports = Backbone.View.extend({
     this.shells = [];
     this.shellViews = [];
     $(window).bind("keydown", this.globalKeyDown.bind(this));
+    archconsole.on("/shells/updated", function(data){
+      var shell = _.find(this.shells, function(s){ return s.get("uuid") == data.uuid})
+      shell.set(data);
+    });
   },
   globalKeyDown: function(e){
     var self = this;
@@ -32,15 +36,10 @@ module.exports = Backbone.View.extend({
   },
   createNewShell: function(){
     var self = this;
-    archconsole.emit("POST /shells/create", {}, function(shellData){
+    archconsole.emit("/shells", {"name": "/create"}, function(shellData){
       var shell = self.currentShell = new Shell(shellData);
       shell.on("change", self.updateStatusbar, self);
       shell.on("currentCommand:changed", self.updateMenu, self);
-      
-      archconsole.on(shell.get('uuid')+"/updated", function(data){
-        shell.set(data);
-      });
-
       self.shells.push(shell);
 
       self.currentShellView = new ShellView({model: shell, el: $(".shellContainer")});
