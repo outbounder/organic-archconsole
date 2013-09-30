@@ -2,6 +2,28 @@ var _ = require("underscore");
 var spawn = require("child_process").spawn;
 var path = require("path");
 
+var joinQuotedArgs = function(args) {
+  var wholeArgumentBuffer = []
+  for(var i = 0; i<args.length; i++) {
+    if(args[i].indexOf('"') === 0) {
+      wholeArgumentBuffer.push(args[i].replace('"',""))
+      args.splice(i, 1)
+      i -= 1
+      continue
+    }
+    if(args[i].indexOf('"') == args[i].length-1) {
+      wholeArgumentBuffer.push(args[i].replace('"',""))
+      args.splice(i, 1, wholeArgumentBuffer.join(" "))
+      wholeArgumentBuffer = []
+      continue
+    }
+    if(wholeArgumentBuffer.length != 0) {
+      wholeArgumentBuffer.push(args[i])
+      args.splice(i, 1)
+    }
+  }
+}
+
 module.exports = function(data){
   _.extend(this, data);
   this.finished = false;
@@ -29,26 +51,7 @@ module.exports.prototype.start = function(){
 
   var args = _.compact(this.value.split(" "))
   var cmd = args.shift()
-  var wholeArgumentBuffer = []
-  for(var i = 0; i<args.length; i++) {
-    if(args[i].indexOf('"') === 0) {
-      wholeArgumentBuffer.push(args[i].replace('"',""))
-      args.splice(i, 1)
-      i -= 1
-      continue
-    }
-    if(args[i].indexOf('"') == args[i].length-1) {
-      wholeArgumentBuffer.push(args[i].replace('"',""))
-      args.splice(i, 1, wholeArgumentBuffer.join(" "))
-      wholeArgumentBuffer = []
-      continue
-    }
-    if(wholeArgumentBuffer.length != 0) {
-      wholeArgumentBuffer.push(args[i])
-      args.splice(i, 1)
-    }
-  }
-  console.log(cmd, args)
+  joinQuotedArgs(args)
   self.childProcess = spawn(cmd, args, options);
 
   self.stdin = self.childProcess.stdin;
