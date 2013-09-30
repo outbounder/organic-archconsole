@@ -3,6 +3,20 @@ var CommandView = require("./commandview");
 module.exports = Backbone.View.extend({
   initialize: function(){
     this.commandViews = [];
+
+    var self = this
+    archconsole.on("/shells/commandstart", function(data){
+      var view = _.find(self.commandViews, function(v){ return v.model.cid == data.value.cid })
+      view.onStart(data.value)
+    })
+    archconsole.on("/commands/output", function(data){
+      var view = _.find(self.commandViews, function(v){ return v.model.get("uuid") == data.uuid})
+      view.onOutput(data.value)
+    })
+    archconsole.on("/commands/terminated", function(data){
+      var view = _.find(self.commandViews, function(v){ return v.model.get("uuid") == data.uuid})
+      view.onTerminated(data.code)
+    })
   },
   createNewCommand : function(){
     this.commandView = new CommandView({model: this.model.createNewCommand()});

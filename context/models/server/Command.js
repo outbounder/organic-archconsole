@@ -1,6 +1,5 @@
 var _ = require("underscore");
 var spawn = require("child_process").spawn;
-var exec = require("child_process").exec;
 var path = require("path");
 
 module.exports = function(data){
@@ -10,6 +9,7 @@ module.exports = function(data){
 
 module.exports.prototype.toJSON = function(){
   return {
+    cid: this.cid,
     uuid: this.uuid,
     shelluuid: this.shelluuid,
     value: this.value,
@@ -27,17 +27,34 @@ module.exports.prototype.start = function(){
     encoding: "binary"
   };
 
-  self.childProcess = exec(self.value, options);
+  var args = _.compact(this.value.split(" "))
+  var cmd = args.shift()
+
+  self.childProcess = spawn(cmd, args, options);
 
   self.stdin = self.childProcess.stdin;
   self.stdout = self.childProcess.stdout;
   self.stderr = self.childProcess.stderr;
+  self.errorBuffer = ""
+  var handler = function(d){ self.monitorSpawnStart(d, handler) }
+  self.stderr.on("data", handler)
 }
 
-module.exports.prototype.terminate = function(silent){
-  this.childTerminateSiled = silent;
+module.exports.prototype.monitorSpawnStart = function(data, handler){
+  var self = this
+  self.errorBuffer += data.toString()
+  if(self.errorBuffer.indexOf("execvp") !== -1) {
+    self.childProcess.emit("exit", 1, 0)
+    self.terminate()
+  }
+  if(self.errorBuffer.length > 100)
+    self.stderr.removeEventListener("data", handler)
+}
+
+module.exports.prototype.terminate = function(){
   if(this.childProcess)
     this.childProcess.kill();
   this.childProcess = null;
   this.stdin = this.stderr = this.stdout = null;
+  this.finished = true;
 }

@@ -2,7 +2,7 @@ var path = require('path')
 var runtime = require("models/server/runtime");
 var Shell = require("models/server/Shell");
 var switchByEventname = require("organic-alchemy").ws.switchByEventname
-
+var _ = require("underscore")
 
 var id = 0;
 var uuid = function () {
@@ -20,6 +20,7 @@ module.exports.init = function(){
       shell.runningCommand = null;
       shell.commandsHistory = null;
       shell.version = archpackage.version;
+      shell.env = _.omit(_.extend({}, process.env), "CELL_MODE")
       runtime.shells.push(shell);
       next(shell.toJSON());
     },

@@ -40,6 +40,7 @@ module.exports = Backbone.View.extend({
   },
   executeCommand: function(){
     var commandData = {
+      cid: this.model.cid,
       shelluuid: this.model.get('shelluuid'),
       value: this.$("input").val(),
       name: "/execute"
@@ -52,30 +53,6 @@ module.exports = Backbone.View.extend({
     this.model.set("running", true);
 
     archconsole.emit("/commands", commandData)
-    archconsole.on("/shells/commandstart", function(data){ self.handleCommandStart(data) })
-  },
-  handleCommandStart: function(data){
-    data = data.value 
-    var self = this
-    if(!data.uuid) return self.handleCommandTermianted(data);
-    self.model.set(data);
-    self.$(".result").addClass(self.model.get("uuid"));
-    self.$el.attr("data-id", self.model.get("uuid"));
-
-    self.handleCommandOutputEvent = "/commands/output";
-    self.commandExecuteTerminatedEvent = "/commands/terminated";
-    self.commandBindKeyOnceEvent = "/commands/bindkeyonce";
-    self.commandTriggerKeySequence = "/commands/trigger/";
-
-    archconsole.on(self.handleCommandOutputEvent, function(data){
-      self.handleCommandOutput(data.value);
-    });
-    archconsole.on(self.commandExecuteTerminatedEvent, function(data){
-      self.handleCommandTermianted(data)
-    });
-    archconsole.on(self.commandBindKeyOnceEvent, function(data){
-      self.handleCommandBindKeyOnce(data)
-    })
   },
   keydown: function(e){
     var self = this;
@@ -132,17 +109,28 @@ module.exports = Backbone.View.extend({
       self.executeCommand();
     } 
   },
-  handleCommandOutput : function(data){
-    if(data.indexOf("<iframe") !== -1 && data.indexOf("</iframe>") !== -1) {
+  onStart: function(data){
+    var self = this
+    if(!data.uuid) return self.handleCommandTermianted(data);
+    self.model.set(data);
+    /*self.commandBindKeyOnceEvent = "/commands/bindkeyonce";
+    self.commandTriggerKeySequence = "/commands/trigger/";*/
+    /*archconsole.on(self.commandBindKeyOnceEvent, function(data){
+      self.handleCommandBindKeyOnce(data)
+    })*/
+  },
+  onOutput : function(data){
+    var chunk = data
+    if(chunk.indexOf("<iframe") !== -1 && chunk.indexOf("</iframe>") !== -1) {
       this.fullScreenMode = true;
-      this.$el.html(this.iframeWrapper({content: data}));  // just as experiment
+      this.$el.html(this.iframeWrapper({content: chunk}));  // just as experiment
     } else {
-      var $output = this.$("."+this.model.get("uuid"));
+      var $output = this.$el.find(".result");
       if($output.length) {
-        this.outputBuffer += data;
-        $output.append(data);
+        this.outputBuffer += chunk;
+        $output.append(chunk);
       } else
-        this.outputBuffer += data;
+        this.outputBuffer += chunk;
     }
     window.scrollTo(0, document.body.scrollHeight);
   },
@@ -162,7 +150,7 @@ module.exports = Backbone.View.extend({
     })
     this._keycomboListeners = []
   },
-  handleCommandTermianted: function(data){
+  onTerminated: function(data){
     this.model.set("running", false);
     if(this.fullScreenMode) { // still from the experiment
       this.$el.find("iframe").remove(); 
@@ -172,14 +160,10 @@ module.exports = Backbone.View.extend({
       }));
     }
 
-    if(data.code == 0)
+    if(data == 0)
       this.$(".status").addClass("alert-success");
     else
       this.$(".status").addClass("alert-error");
-    
-    archconsole.removeListener(this.handleCommandOutputEvent, this.handleCommandOutput);
-    archconsole.removeListener(this.commandExecuteTerminatedEvent, this.handleCommandTermianted);
-    archconsole.removeListener(this.commandBindKeyOnceEvent, this.handleCommandBindKeyOnce)
     
     this.trigger("finished");
     this.unbind();
