@@ -14,7 +14,10 @@
   },
   "WebSocketServer": {
     "source": "node_modules/organic-socketioserver",
-    "attachToChemical": "HttpServer"
+    "attachToChemical": "HttpServer",
+    "emit": {
+      "ready": "WebSocketServer"
+    }
   },
   "Tissue": {
     "source": "node_modules/organic-cells/membrane/Tissue",
