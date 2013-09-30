@@ -29,7 +29,26 @@ module.exports.prototype.start = function(){
 
   var args = _.compact(this.value.split(" "))
   var cmd = args.shift()
-
+  var wholeArgumentBuffer = []
+  for(var i = 0; i<args.length; i++) {
+    if(args[i].indexOf('"') === 0) {
+      wholeArgumentBuffer.push(args[i].replace('"',""))
+      args.splice(i, 1)
+      i -= 1
+      continue
+    }
+    if(args[i].indexOf('"') == args[i].length-1) {
+      wholeArgumentBuffer.push(args[i].replace('"',""))
+      args.splice(i, 1, wholeArgumentBuffer.join(" "))
+      wholeArgumentBuffer = []
+      continue
+    }
+    if(wholeArgumentBuffer.length != 0) {
+      wholeArgumentBuffer.push(args[i])
+      args.splice(i, 1)
+    }
+  }
+  console.log(cmd, args)
   self.childProcess = spawn(cmd, args, options);
 
   self.stdin = self.childProcess.stdin;
@@ -48,7 +67,7 @@ module.exports.prototype.monitorSpawnStart = function(data, handler){
     self.terminate()
   }
   if(self.errorBuffer.length > 100)
-    self.stderr.removeEventListener("data", handler)
+    self.stderr.removeListener("data", handler)
 }
 
 module.exports.prototype.terminate = function(){
