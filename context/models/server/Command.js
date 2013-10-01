@@ -11,7 +11,7 @@ var joinQuotedArgs = function(args) {
       i -= 1
       continue
     }
-    if(args[i].indexOf('"') == args[i].length-1) {
+    if(args[i].indexOf('"') != -1) {
       wholeArgumentBuffer.push(args[i].replace('"',""))
       args.splice(i, 1, wholeArgumentBuffer.join(" "))
       wholeArgumentBuffer = []
@@ -20,6 +20,7 @@ var joinQuotedArgs = function(args) {
     if(wholeArgumentBuffer.length != 0) {
       wholeArgumentBuffer.push(args[i])
       args.splice(i, 1)
+      i -= 1
     }
   }
 }
@@ -57,6 +58,8 @@ module.exports.prototype.start = function(){
   self.stdin = self.childProcess.stdin;
   self.stdout = self.childProcess.stdout;
   self.stderr = self.childProcess.stderr;
+
+  // node.js core ftw?
   self.errorBuffer = ""
   var handler = function(d){ self.monitorSpawnStart(d, handler) }
   self.stderr.on("data", handler)
@@ -80,3 +83,5 @@ module.exports.prototype.terminate = function(){
   this.stdin = this.stderr = this.stdout = null;
   this.finished = true;
 }
+
+module.exports.joinQuotedArgs = joinQuotedArgs
