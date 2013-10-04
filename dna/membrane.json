@@ -16,7 +16,9 @@
     "source": "node_modules/organic-socketioserver",
     "attachToChemical": "HttpServer",
     "emit": {
-      "ready": "WebSocketServer"
+      "ready": "SocketioServer",
+      "connection": "SocketioConnection",
+      "disconnection": "SocketioDisconnection"
     }
   },
   "Tissue": {
