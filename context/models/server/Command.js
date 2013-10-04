@@ -28,6 +28,8 @@ var joinQuotedArgs = function(args) {
 module.exports = function(data){
   _.extend(this, data);
   this.finished = false;
+  if(!this.env)
+    this.env = {}
 }
 
 module.exports.prototype.toJSON = function(){
@@ -43,10 +45,10 @@ module.exports.prototype.toJSON = function(){
 
 module.exports.prototype.start = function(){
   var self = this;
-
+  console.log(this)
   var options = {
     cwd: this.cwd || self.shell.cwd,
-    env: self.shell.env,
+    env: _.extend({}, self.shell.env, this.env),
     encoding: "binary"
   };
 

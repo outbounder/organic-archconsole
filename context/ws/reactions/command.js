@@ -102,11 +102,30 @@ var pipeTerminatedToClients = function(c, next){
   next && next()
 }
 
-var execute = module.exports.execute = splitByCommand( 
-  chain(
-    prepareAsCommand,
-    executeCommand,
-    pipeOutputToClients,
-    pipeTerminatedToClients
+var aggregateEnvVars = function(c, next){
+  var pattern = /([A-Z_]+=[a-zA-Z0-9]+)+/g
+  var envVars = c.command.value.match(pattern)
+  if(envVars) {
+    for(var i = 0; i<envVars.length; i++) {
+      var pairs = envVars[i].split("=")
+      var variable = {}
+      variable[pairs[0]] = pairs[1]
+      _.extend(c.command.env, variable)
+      c.command.value = c.command.value.replace(envVars[i]+" ", "")
+    }
+  }
+  next && next()
+}
+
+var execute = module.exports.execute = 
+  splitByCommand( 
+    chain(
+      prepareAsCommand,
+      aggregateEnvVars, 
+      executeCommand,
+      pipeOutputToClients,
+      pipeTerminatedToClients
+    )
   )
-)
+
+module.exports.aggregateEnvVars = aggregateEnvVars
