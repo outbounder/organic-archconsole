@@ -18,7 +18,7 @@ var Router = Backbone.Router.extend({
 })
 
 archconsole = io.connect(config.endpoint);
-archconsole.emit("GET /user", {}, function(data){
+archconsole.emit("/user", {}, function(data){
   runtime.user = new User(data);
   runtime.router = new Router();
   Backbone.history.start({pushState: false, trigger: true});

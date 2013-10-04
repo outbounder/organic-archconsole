@@ -3,10 +3,15 @@
     "source": "node_modules/organic-jadefy",
     "exportsGlobal": "jadefy"
   },
-  "SocketIOActions": {
-    "source": "node_modules/organic-socketioactions",
-    "cwd": {
-      "actions": "/context/ws/io-actions"
+  "SocketioReactor": {
+    "source": "node_modules/organic-socketioreactor",
+    "reactions": {
+      "root": "context/ws/reactions",
+      "extname": ".js",
+      "indexname": "index"
+    },
+    "capture": {
+      "type": "SocketioConnection"
     }
   },
   "HttpReactor": {

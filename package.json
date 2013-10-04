@@ -10,7 +10,7 @@
     "connect": "2.9.0",
     "underscore": "1.4.4",
     "glob": "3.1.14",
-    "async": "0.1.22",
+    "async": "0.2.9",
     "shelljs": "0.1.2",
     "jade": "0.35.0"
   },
@@ -22,6 +22,7 @@
     
     "organic-socketioserver": "0.0.1",
     "organic-socketioactions": "0.0.1",
+    "organic-socketioreactor": "0.0.1",
 
     "organic-bundlestyle": "0.0.1",
     "organic-bundlecode": "0.0.3",
