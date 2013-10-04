@@ -13,22 +13,16 @@ module.exports = Backbone.View.extend({
     this.$el.find(".input").html(self.model.get("value"))
   },
   output : function(chunk){
+    this.$el.find(".result").show()
     this.$el.find(".result").append(chunk);
   },
   terminated: function(code){
     this.model.set("running", false);
-    if(this.fullScreenMode) { // still from the experiment
-      this.$el.find("iframe").remove(); 
-      this.$el.html(this.commandOutput({
-        input: this.model.get("value"),
-        output: this.outputBuffer
-      }));
-    }
 
     if(code == 0)
-      this.$(".status").addClass("alert-success");
+      this.$el.find(".status").addClass("alert-success").removeClass("alert-info");
     else
-      this.$(".status").addClass("alert-error");
+      this.$el.find(".status").addClass("alert-error").removeClass("alert-info");
     
     this.unbind();
   },

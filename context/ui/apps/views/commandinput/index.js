@@ -7,7 +7,18 @@ module.exports = Backbone.View.extend({
     "keydown :input": "keydown"
   },
   initialize: function(){
-    this._keycomboListeners = []
+    this.input_history = []
+    this.started = {}
+  },
+  indicateCommandChange: function(data){
+    if(data.started)
+      this.started[data.uuid] = true
+    else
+      delete this.started[data.uuid]
+    if(!_.isEmpty(this.started))
+      this.$el.find(".status").removeClass("alert-info").addClass("alert")
+    else
+      this.$el.find(".status").removeClass("alert").addClass("alert-info")
   },
   autocomplete: function(){
     var self = this;
@@ -36,38 +47,17 @@ module.exports = Backbone.View.extend({
   },
   executeCommand: function(){
     var commandData = {
-      cid: this.model.cid,
       shelluuid: this.model.get('shelluuid'),
       value: this.$("input").val(),
       name: "/execute"
     }
     archconsole.emit("/commands", commandData)
+    this.input_history.push(this.$("input").val())
+    this.input_history_cursor = this.input_history.length
     this.$("input").val("")
   },
   keydown: function(e){
     var self = this;
-    var notTypedSomething = (
-      this.$("input").val().length == 0 || 
-      (this.model && this.$("input").val() == this.model.get("value"))
-    )
-
-    if(e.keyCode == 38 && notTypedSomething) { // up
-      e.preventDefault();
-      if(this.model.previousCommand) {
-        this.model = this.model.previousCommand;
-        this.$("input").val(this.model.get("value"));
-      } 
-      return;
-    }
-
-    if(e.keyCode == 40 && notTypedSomething) { // down
-      e.preventDefault();
-      if(this.model.nextCommand) {
-        this.model = this.model.nextCommand;
-        this.$("input").val(this.model.get("value"));
-      } 
-      return;
-    }
 
     if(e.keyCode == 9) { // tab
       e.preventDefault();
@@ -91,6 +81,24 @@ module.exports = Backbone.View.extend({
           self.autocomplete();  
         }, 50);
       }
+      return;
+    }
+
+    if(e.keyCode == 38) { // up
+      e.preventDefault();
+      if(this.input_history.length > 0) {
+        this.input_history_cursor -= 1
+        this.$("input").val(this.input_history[this.input_history_cursor]);
+      } 
+      return;
+    }
+
+    if(e.keyCode == 40) { // down
+      e.preventDefault();
+      if(this.input_history.length > this.input_history_cursor) {
+        this.input_history_cursor += 1
+        this.$("input").val(this.input_history[this.input_history_cursor]);
+      } 
       return;
     }
 
