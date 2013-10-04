@@ -45,7 +45,6 @@ module.exports.prototype.toJSON = function(){
 
 module.exports.prototype.start = function(){
   var self = this;
-  console.log(this)
   var options = {
     cwd: this.cwd || self.shell.cwd,
     env: _.extend({}, self.shell.env, this.env),

@@ -1,10 +1,11 @@
 var Command = require("./Command");
+var _ = require("underscore")
 
 module.exports = Backbone.Model.extend({
   initialize: function(){
     this.currentCommandTitle = "shell";
   },
-  createNewCommand: function(){
+  createNewCommand: function(data){
     var command = new Command({
       shelluuid: this.get('uuid')
     });

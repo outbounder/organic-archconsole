@@ -21,15 +21,29 @@ var uuid = function () {
   return String(id++);
 }
 
-var splitByCommand = function(execCmd){
+var splitByCommand = function(execCmd /* Reaction for executing a command */){
   return function(c, parent) {
+    console.log(c.data.value)
+    // split the command's value by AND and execute each as single command
     async.eachSeries(c.data.value.split("&&"), function(cmd, next){
+      
+      // split the command's value by OR with support of piping -> 
+      // firstCommand.output is piped to secondCommand.input
       if(cmd.indexOf("|") != -1) {
-        var cmdSource = null
+        
+        // pointer to firstCommand in a row
+        var cmdSource = null 
+
+        // each command in a row is executed by the execCmd Reaction
         async.eachSeries(cmd.split("|"), function(cmdOrigin, n){
+
+          // create extendedC chemical for triggering new command reaction
+          // and set value of the current command to be executed
           var extendedC = _.extend({}, c)
-          extendedC.data.value = cmdOrigin
+          extendedC.data.value = cmdOrigin 
           execCmd(extendedC, function(){
+
+            // if there is firstCommand started pipe its output to current one from the row
             if(cmdSource)
               cmdSource.command.stdout.pipe(extendedC.command.stdin)
             cmdSource = extendedC
@@ -94,6 +108,7 @@ var pipeOutputToClients = function(c, next){
 var pipeTerminatedToClients = function(c, next){
   if(c.command.childProcess) {
     c.command.childProcess.on("exit", function(code, signal){
+      console.log("TERMINATED", code, c.command.value)
       c.command.code = code
       c.command.signal = signal
       c.socket.emit("/commands/terminated", { uuid: c.command.uuid, code: c.command.code })

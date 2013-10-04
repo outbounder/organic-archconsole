@@ -9,7 +9,7 @@ module.exports.init = function(plasma, dna){
       if(!command) return;
       command.terminate();
       runtime.commands.removeByUUID(command.uuid);
-      next && next()
+      next && next(command)
     }
   })
 }

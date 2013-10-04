@@ -1,4 +1,4 @@
-var ShellView = require("./ShellView");
+var ShellView = require("./shell");
 var Shell = require("models/client/Shell");
 
 module.exports = Backbone.View.extend({
@@ -25,10 +25,7 @@ module.exports = Backbone.View.extend({
     if(e.shiftKey && e.ctrlKey && e.keyCode == 13) { // SHIFT+CTRL+ENTER
       var uuid = this.currentShellView.currentCommand.get("uuid")
       var cmdValue = this.currentShellView.currentCommand.get("value")
-      archconsole.emit("/commands", {name: "/terminate", uuid: uuid}, function(){
-        self.currentShellView.commandView.$("input").val(cmdValue);
-        self.currentShellView.commandView.executeCommand();
-      })
+      archconsole.emit("/commands", {name: "/restart", uuid: uuid})
     }
   },
   createNewShell: function(){
@@ -39,7 +36,6 @@ module.exports = Backbone.View.extend({
       self.currentShellView = new ShellView({model: shell, el: $(".shellContainer")});
       self.currentShellView.visible = true;
       self.render();
-      self.currentShellView.createNewCommand();
     });
   },
   updateStatusbar: function(){
