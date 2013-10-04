@@ -9,9 +9,6 @@
   "BundleStyle": {
     "source": "node_modules/organic-bundlestyle"
   },
-  "SocketIOActions": {
-    "log": true
-  },
   "HttpReactor": {
     "endReactions": [
       {

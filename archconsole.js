@@ -14,6 +14,8 @@ module.exports = function() {
   dna.loadDir(process.cwd()+"/dna", function(){
     if(dna[process.env.CELL_MODE])
       dna.mergeBranchInRoot(process.env.CELL_MODE);
+    if(process.env.PORT)
+      dna.membrane.HttpServer.port = process.env.PORT
 
     Cell.call(self, dna);
 
