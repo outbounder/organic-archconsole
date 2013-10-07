@@ -17,7 +17,7 @@ module.exports = Backbone.View.extend({
       self.commands.push(view)
       self.lastStartedCommand = view.model
       self.commandInput.indicateCommandChange({started: true, uuid: data.value.uuid})
-      self.commandInput.$el.hide()
+      //self.commandInput.$el.hide()
     })
     archconsole.on("/commands/output", function(data){
       var view = _.find(self.commands, function(v){ return v.model.get("uuid") == data.uuid})
@@ -29,7 +29,7 @@ module.exports = Backbone.View.extend({
       view.model.trigger("terminated", data.code)
       window.scrollTo(0, document.body.scrollHeight);
       self.commandInput.indicateCommandChange({started: false, uuid: data.uuid})
-      self.commandInput.$el.show().focus()
+      //self.commandInput.$el.show().focus()
     })
     archconsole.on("/commands/bindkeyonce", function(data){
       var view = _.find(self.commands, function(v){ return v.model.get("uuid") == data.uuid})
