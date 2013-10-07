@@ -26,6 +26,15 @@ module.exports = function(c){
     terminate: function(){
       socket.emit("/commands/terminated", {uuid: command.uuid, code: 0});     
     },
+    execute: function(cmdValue, handler) {
+      var extendedC = _.extend({}, c, {
+        data: {
+          value: cmdValue,
+          shelluuid: command.shelluuid
+        }
+      })
+      commandReaction.execute(extendedC, handler)
+    },
     bindKey: function(keySequence, cmd, handler) {
       var uuid = generator.v1()
       var handlerTrigger = function(){
