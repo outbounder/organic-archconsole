@@ -5,6 +5,21 @@ module.exports = Backbone.View.extend({
     this.model.on("start", this.start, this)
     this.model.on("output", this.output, this)
     this.model.on("terminated", this.terminated, this)
+    this.model.on("bindkeyonce", this.bindkeyonce, this)
+    this.model.on("bindkey", this.bindkey, this)
+  },
+  bindkey: function(keySequence, cmd_id) {
+    var handler = function(){
+      archconsole.emit("/commands/trigger/"+cmd_id)
+    }
+    var keyCombo = KeyboardJS.on(keySequence, handler)
+  },
+  bindkeyonce: function(keySequence, cmd_id) {
+    var handler = function(){
+      archconsole.emit("/commands/trigger/"+cmd_id)
+      keyCombo.clear()
+    }
+    var keyCombo = KeyboardJS.on(keySequence, handler)
   },
   start: function(data){
     var self = this

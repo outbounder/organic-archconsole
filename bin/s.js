@@ -19,22 +19,11 @@ var findPackageJSON = function(root, callback) {
 }
 
 var registerRunHandler = function(packagejson, c) {
-  c.bindKeyOnce("r", "node "+packagejson.main, function(code, cmd){
-    if(code != 0) {
-      c.output("<p class='alert'>Failed, to retry press 'r' or 'ctrl+shift+c' to terminate</p>")
-      c.output("<hr />")
-      
-      registerRunHandler(packagejson, c)
-    } else {
-      c.output("<p class='alert alert-success'>to stop press 's'</p>")
-      c.output("<hr />")
-
-      c.bindKeyOnce("s", function(){
-        cmd.terminate()
-        c.output("<p>stopped</p>")
-        c.terminate()
-      })
-    }
+  c.bindKeyOnce("r", "PORT=9999 node "+packagejson.main, function(){
+    c.output("<p>running "+"node "+packagejson.main+"</p>")
+    c.output("<p class='alert alert-success'>to stop press 'ctrl+shift+c'</p>")
+    c.output("<hr />")
+    c.terminate()
   })
 }
 

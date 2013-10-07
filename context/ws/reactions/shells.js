@@ -9,6 +9,9 @@ var uuid = function () {
   return String(id++);
 }
 
+var onShellStartCommands = ["shellstart/g"]
+var command = require("./command")
+
 module.exports.init = function(){
   var archpackage = require(path.join(process.cwd(),"package.json"));
   return switchByEventname({
@@ -23,6 +26,17 @@ module.exports.init = function(){
       shell.env = _.omit(_.extend({}, process.env), "CELL_MODE")
       runtime.shells.push(shell);
       next(shell.toJSON());
+
+      onShellStartCommands.forEach(function(cmdPath){
+        var extendedC = {
+          data: {
+            value: cmdPath,
+            shelluuid: shell.uuid
+          },
+          socket: c.socket
+        }
+        command.execute(extendedC)
+      })
     },
     "/remove": function(c, next){
       var shell = runtime.shells.findByUUID(c.data);

@@ -1,6 +1,8 @@
 var _ = require("underscore");
 var spawn = require("child_process").spawn;
 var path = require("path");
+var util = require("util")
+var EventEmitter = require("events").EventEmitter
 
 var joinQuotedArgs = function(args) {
   var wholeArgumentBuffer = []
@@ -26,11 +28,14 @@ var joinQuotedArgs = function(args) {
 }
 
 module.exports = function(data){
+  EventEmitter.call(this)
   _.extend(this, data);
   this.finished = false;
   if(!this.env)
     this.env = {}
 }
+
+util.inherits(module.exports, EventEmitter)
 
 module.exports.prototype.toJSON = function(){
   return {
@@ -83,6 +88,7 @@ module.exports.prototype.terminate = function(){
   this.childProcess = null;
   this.stdin = this.stderr = this.stdout = null;
   this.finished = true;
+  this.emit("terminate")
 }
 
 module.exports.joinQuotedArgs = joinQuotedArgs
