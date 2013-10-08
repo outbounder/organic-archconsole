@@ -7,21 +7,12 @@
     "organic":"0.1.1",
     "organic-cells": "0.0.17",
 
-    "connect": "2.9.0",
-    "underscore": "1.4.4",
-    "glob": "3.1.14",
-    "async": "0.2.9",
-    "shelljs": "0.1.2",
-    "jade": "0.35.0"
-  },
-  "devDependencies": {
-    "organic-alchemy": "0.0.0",
+    "organic-alchemy": "0.0.1",
 
     "organic-httpserver": "0.0.1",
     "organic-httpreactor": "0.0.1",
     
-    "organic-socketioserver": "0.0.1",
-    "organic-socketioactions": "0.0.1",
+    "organic-socketioserver": "0.0.2",
     "organic-socketioreactor": "0.0.1",
 
     "organic-bundlestyle": "0.0.1",
@@ -29,7 +20,14 @@
     
     "organic-jadefy": "0.0.1",
     "organic-logger": "0.0.1",
-    "organic-symlink": "0.0.1"
+    "organic-symlink": "0.0.2",
+
+    "connect": "2.9.0",
+    "underscore": "1.4.4",
+    "glob": "3.1.14",
+    "async": "0.2.9",
+    "jade": "0.35.0",
+    "shelljs": "0.1.2"
   },
   "optionalDependencies": {},
   "engines": {
