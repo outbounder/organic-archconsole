@@ -1,6 +1,6 @@
 # What is this? #
 
-![Archconsole](http://pbs.twimg.com/media/BFGFUQ6CAAA9DS2.png:large)
+![Archconsole](https://raw.github.com/outbounder/organic-archconsole/master/preview.png:large)
 
 This is very limited web based unix/win/mac terminal.
 It is the simplest implementation ever still enough to handle:
@@ -24,7 +24,11 @@ Archconsole is inspired heavily from TermKit (https://github.com/unconed/TermKit
 
 Notes:
 
-* every command has a marker on its left. If it is green - then command completed successfully. If it is red - failure occurred. If it is orange - then the command is still running.
+* every command has a marker on its left.
+  * green - then command completed successfully.
+  * red - failure occurred.
+  * organge/blue - then the command is still running.
+* ctrl+end - goes to the bottom of the shell and docks there showing the output of last running command
 * ctrl+shift+c terminates last started command
 * use ctrl+shift+enter to restart last started command
 * when command is still running you can see it on top of the browser window with a number
