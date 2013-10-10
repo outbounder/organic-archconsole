@@ -1,6 +1,6 @@
 # What is this? #
 
-![Archconsole](https://raw.github.com/outbounder/organic-archconsole/master/preview.png:large)
+![Archconsole](https://raw.github.com/outbounder/organic-archconsole/master/preview.png)
 
 This is very limited web based unix/win/mac terminal.
 It is the simplest implementation ever still enough to handle:
