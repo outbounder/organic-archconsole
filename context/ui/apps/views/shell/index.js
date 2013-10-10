@@ -7,9 +7,17 @@ module.exports = Backbone.View.extend({
 
   initialize: function(){
     var self = this
+    var dockedAtBottom = true
+    $(window).scroll(function(){
+      if($(window).scrollTop() + $(window).height() == $(document).height())
+        dockedAtBottom = true
+      if($(window).scrollTop() + $(window).height() < $(document).height()-$(window).height()/2)
+        dockedAtBottom = false
+    })
 
     var scrollToBottom = function(){
-      window.scrollTo(0, document.body.scrollHeight);
+      if(dockedAtBottom)
+        window.scrollTo(0, document.body.scrollHeight);
     }
 
     this.model.on("change", this.updateStatusBar, this)
