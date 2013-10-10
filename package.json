@@ -3,6 +3,9 @@
   "name": "organic-archconsole",
   "main": "archconsole.js",
   "version": "0.0.2",
+  "scripts": {
+    "test": "jasmine-node ./tests"
+  },
   "dependencies": {
     "organic":"0.1.1",
     "organic-cells": "0.0.17",
@@ -11,13 +14,13 @@
 
     "organic-httpserver": "0.0.1",
     "organic-httpreactor": "0.0.1",
-    
+
     "organic-socketioserver": "0.0.2",
     "organic-socketioreactor": "0.0.1",
 
     "organic-bundlestyle": "0.0.1",
     "organic-bundlecode": "0.0.3",
-    
+
     "organic-jadefy": "0.0.1",
     "organic-logger": "0.0.1",
     "organic-symlink": "0.0.2",

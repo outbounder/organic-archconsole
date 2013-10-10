@@ -20,6 +20,7 @@ var findPackageJSON = function(root, callback) {
 
 module.exports = function(c, next) {
   c.output("<p>press 'alt+shift+r' to run current as node </p>")
+  c.output("<p>press 'alt+shift+t' to run current tests </p>")
   c.bindKey("alt+shift+r", function(){
     var shell = c.command.shell
     findPackageJSON(shell.cwd, function(packagejson){
