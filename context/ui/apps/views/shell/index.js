@@ -17,6 +17,7 @@ module.exports = Backbone.View.extend({
       self.commands.push(view)
       self.lastStartedCommand = view.model
       self.commandInput.indicateCommandChange({started: true, uuid: data.value.uuid})
+      self.updateStickyCommands()
       //self.commandInput.$el.hide()
     })
     archconsole.on("/commands/output", function(data){
@@ -29,6 +30,7 @@ module.exports = Backbone.View.extend({
       view.model.trigger("terminated", data.code)
       window.scrollTo(0, document.body.scrollHeight);
       self.commandInput.indicateCommandChange({started: false, uuid: data.uuid})
+      self.updateStickyCommands()
       //self.commandInput.$el.show().focus()
     })
     archconsole.on("/commands/bindkeyonce", function(data){
@@ -39,6 +41,12 @@ module.exports = Backbone.View.extend({
       var view = _.find(self.commands, function(v){ return v.model.get("uuid") == data.uuid})
       view.model.trigger("bindkey", data.keySequence, data.cmd_id)
     })
+  },
+  updateStickyCommands: function(){
+    var runningCount = 0
+    for(var i = 0; i<this.commands.length; i++)
+      if(this.commands[i].model.get("running") == true)
+        this.commands[i].updateStickyOffset(runningCount++)
   },
   updateStatusBar: function(){
     this.$(".statusbarContainer").html(this.statusbarTemplate({

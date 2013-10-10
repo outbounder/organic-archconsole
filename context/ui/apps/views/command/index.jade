@@ -1,8 +1,14 @@
 .command
+  a(name= model.cid)
+  .sticky
+    .container
+      .row-fluid
+        a(href= "#"+model.cid).status.alert.alert-info.span1
+        .span9
+          .readonly.input.uneditable-input.span9
+        a.btnRemove.btn.btn-small x
   .row-fluid
-    .status.alert.alert-info.span1
-    .span9.offset2
-      .readonly.input.uneditable-input.span9
+    .span1
     .command.output.span9
       pre.well.result.hide
   hr

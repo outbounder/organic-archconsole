@@ -11,9 +11,7 @@ var Router = Backbone.Router.extend({
   },
 
   landing: function(){
-    var view = new ArchConsoleView({model: runtime.user, el: $(".container")});
-    runtime.archconsoleView = view;
-    view.createNewShell();
+
   }
 })
 
@@ -22,6 +20,10 @@ archconsole.emit("/user", {}, function(data){
   runtime.user = new User(data);
   runtime.router = new Router();
   Backbone.history.start({pushState: false, trigger: true});
+
+  var view = new ArchConsoleView({model: runtime.user, el: $(".container")});
+  runtime.archconsoleView = view;
+  view.createNewShell();
 });
 
 var ArchConsoleView = require("./views/ArchConsoleView");
