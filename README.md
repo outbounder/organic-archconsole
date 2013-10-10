@@ -18,15 +18,18 @@ Archconsole is inspired heavily from TermKit (https://github.com/unconed/TermKit
 
 ## How to use ##
 
-1. start 
-2. open http://localhost:3333/ 
+1. start
+2. open http://localhost:3333/
 3. input terminal command
 
 Notes:
 
 * every command has a marker on its left. If it is green - then command completed successfully. If it is red - failure occurred. If it is orange - then the command is still running.
-* ctrl+shift+c terminates current command
-* use ctrl+shift+enter to restart current running command
+* ctrl+shift+c terminates last started command
+* use ctrl+shift+enter to restart last started command
+* when command is still running you can see it on top of the browser window with a number
+  * ctrl+shift+`number` - restarts that command
+  * alt+shift+`number` - terminates that command
 
 ## Experimental
 
@@ -48,7 +51,7 @@ See /bin/shellstart/*.js files for more info.
 
 ### if you don't have angel yet ###
 
-    $ npm install organic-angel -g 
+    $ npm install organic-angel -g
 
 ## How to start ##
 

@@ -2,7 +2,8 @@ module.exports = Backbone.View.extend({
   template: require("./index.jade"),
 
   events: {
-    "click .btnRemove": "terminateCommand"
+    "click .btnRemove": "terminateCommand",
+    "click .btnRestart": "restartCommand"
   },
 
   initialize: function(){
@@ -24,6 +25,9 @@ module.exports = Backbone.View.extend({
       keyCombo.clear()
     }
     var keyCombo = KeyboardJS.on(keySequence, handler)
+  },
+  restartCommand: function(){
+    archconsole.emit("/commands", {name: "/restart", uuid: this.model.get("uuid")})
   },
   start: function(data){
     var self = this
@@ -49,8 +53,14 @@ module.exports = Backbone.View.extend({
     else
       this.$el.find(".status").addClass("alert-error").removeClass("alert-info");
 
+    this.$el.find(".status").empty()
     this.$el.find(".btnRemove").hide()
-    this.$el.find(".btnFocusOutput").hide()
+    this.$el.find(".btnRestart").hide()
+    if(this.terminateCombo)
+      this.terminateCombo.clear()
+    if(this.restartCombo)
+      this.restartCombo.clear()
+
     this.unbind();
   },
   render: function(){
@@ -60,8 +70,24 @@ module.exports = Backbone.View.extend({
     return this
   },
   updateStickyOffset: function(index) {
+    var self = this
+
     this.$el.find(".sticky").css({
       top: (index*30)+"px"
+    })
+
+    this.$el.find(".status").html(index+1)
+
+    if(this.terminateCombo)
+      this.terminateCombo.clear()
+    this.terminateCombo = KeyboardJS.on("alt+shift+"+(index+1), function(){
+      self.terminateCommand()
+    })
+
+    if(this.restartCombo)
+      this.restartCombo.clear()
+    this.restartCombo = KeyboardJS.on("ctrl+shift+"+(index+1), function(){
+      self.restartCommand()
     })
   }
 })

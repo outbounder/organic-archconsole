@@ -20,7 +20,8 @@ module.exports.init = function(plasma, dna){
       require("./command").execute({
         data: {
           shelluuid: command.shelluuid,
-          value: command.value  
+          value: command.value,
+          cwd: command.cwd
         },
         socket: c.socket
       })

@@ -8,6 +8,10 @@ module.exports = Backbone.View.extend({
   initialize: function(){
     var self = this
 
+    var scrollToBottom = function(){
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+
     this.model.on("change", this.updateStatusBar, this)
     self.commands = []
     archconsole.on("/shells/commandstart", function(data){
@@ -18,20 +22,19 @@ module.exports = Backbone.View.extend({
       self.lastStartedCommand = view.model
       self.commandInput.indicateCommandChange({started: true, uuid: data.value.uuid})
       self.updateStickyCommands()
-      //self.commandInput.$el.hide()
+      scrollToBottom()
     })
     archconsole.on("/commands/output", function(data){
       var view = _.find(self.commands, function(v){ return v.model.get("uuid") == data.uuid})
       view.model.trigger("output", data.value)
-      window.scrollTo(0, document.body.scrollHeight);
+      scrollToBottom()
     })
     archconsole.on("/commands/terminated", function(data){
       var view = _.find(self.commands, function(v){ return v.model.get("uuid") == data.uuid})
       view.model.trigger("terminated", data.code)
-      window.scrollTo(0, document.body.scrollHeight);
       self.commandInput.indicateCommandChange({started: false, uuid: data.uuid})
       self.updateStickyCommands()
-      //self.commandInput.$el.show().focus()
+      scrollToBottom()
     })
     archconsole.on("/commands/bindkeyonce", function(data){
       var view = _.find(self.commands, function(v){ return v.model.get("uuid") == data.uuid})

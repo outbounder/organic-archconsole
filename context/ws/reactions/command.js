@@ -25,13 +25,13 @@ var splitByCommand = function(execCmd /* Reaction for executing a command */){
   return function(c, parent) {
     // split the command's value by AND and execute each as single command
     async.eachSeries(c.data.value.split("&&"), function(cmd, next){
-      
-      // split the command's value by OR with support of piping -> 
+
+      // split the command's value by OR with support of piping ->
       // firstCommand.output is piped to secondCommand.input
       if(cmd.indexOf("|") != -1) {
-        
+
         // pointer to firstCommand in a row
-        var cmdSource = null 
+        var cmdSource = null
 
         // each command in a row is executed by the execCmd Reaction
         var lastcmd = cmd.split("|").pop()
@@ -71,7 +71,7 @@ var prepareAsCommand = function(c, next) {
   var command = new Command(c.data);
   command.shell = shell;
   command.uuid = uuid();
-  command.cwd = shell.cwd;
+  command.cwd = command.cwd || shell.cwd;
   c.command = command
   shell.runningCommand = command;
   runtime.commands.push(command);
@@ -132,11 +132,11 @@ var aggregateEnvVars = function(c, next){
   next && next()
 }
 
-var execute = module.exports.execute = 
-  splitByCommand( 
+var execute = module.exports.execute =
+  splitByCommand(
     chain(
       prepareAsCommand,
-      aggregateEnvVars, 
+      aggregateEnvVars,
       executeCommand,
       pipeOutputToClients,
       pipeTerminatedToClients
