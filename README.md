@@ -41,6 +41,7 @@ scripting of custom commands in javascript:
 
 * alt+shift+g - runs `git status`
 * alt+shift+r - reads from current directory `package.json` and executes via `node` its `main`
+* alt+shift+t - reads from current directory `package.json` and executes via `node` its `scripts.test`
 
 See /bin/shellstart/*.js files for more info.
 

@@ -9,7 +9,7 @@ var uuid = function () {
   return String(id++);
 }
 
-var onShellStartCommands = ["shellstart/git-status", "shellstart/run-node"]
+var onShellStartCommands = ["shellstart/git-status", "shellstart/node"]
 var command = require("./command")
 
 module.exports.init = function(){
