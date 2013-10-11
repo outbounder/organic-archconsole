@@ -7,7 +7,7 @@ module.exports = function(){
 
 module.exports.prototype.load = function(c, next) {
   var self = this;
-  glob(path.join(c.root, "**/*.js"), function(err, files){
+  glob(path.join(c.root, "**", "*.js"), function(err, files){
     if(err) return next && next(err)
     files.forEach(function(file){
       var name = file.replace(".js", "").replace(c.root+path.sep, "")
