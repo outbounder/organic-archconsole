@@ -18,13 +18,15 @@ module.exports = function(c){
       socket.removeListener("/commands/trigger/"+uuid, trigger_cache[uuid])
     socket.emit("/commands/terminated", {uuid: command.uuid, code: 1});
   })
-  
+
   return _.extend({
     output: function(value){
-      socket.emit("/commands/output",{uuid: command.uuid, value: value});    
+      socket.emit("/commands/output",{uuid: command.uuid, value: value});
+      return this
     },
     terminate: function(){
-      socket.emit("/commands/terminated", {uuid: command.uuid, code: 0});     
+      socket.emit("/commands/terminated", {uuid: command.uuid, code: 0});
+      return this
     },
     execute: function(cmdValue, handler) {
       var extendedC = _.extend({}, c, {
@@ -34,6 +36,7 @@ module.exports = function(c){
         }
       })
       commandReaction.execute(extendedC, handler)
+      return this
     },
     bindKey: function(keySequence, cmd, handler) {
       var uuid = generator.v1()
@@ -54,10 +57,11 @@ module.exports = function(c){
       socket.on("/commands/trigger/"+uuid, handlerTrigger)
       trigger_cache[uuid] = handlerTrigger
       socket.emit("/commands/bindkey", {
-        uuid: command.uuid, 
-        keySequence: keySequence, 
+        uuid: command.uuid,
+        keySequence: keySequence,
         cmd_id: uuid
       });
+      return this
     },
     bindKeyOnce: function(keySequence, cmd, handler) {
       var uuid = generator.v1()
@@ -80,10 +84,11 @@ module.exports = function(c){
       socket.on("/commands/trigger/"+uuid, handlerTrigger)
       trigger_cache[uuid] = handlerTrigger
       socket.emit("/commands/bindkeyonce", {
-        uuid: command.uuid, 
-        keySequence: keySequence, 
+        uuid: command.uuid,
+        keySequence: keySequence,
         cmd_id: uuid
       });
+      return this
     }
   }, c)
 }

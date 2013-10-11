@@ -5,6 +5,7 @@ module.exports = function(c, next){
   var socket = c.socket
   var command = c.command
   var shell = c.command.shell
+  if(command.value.indexOf(" ") === -1) return c.output("<p>usage: nvm "+shell.currentNodeVersion+"</p>").terminate()
   var nodeVersion = command.value.split(" ").pop()
   var envPATHparts = shell.env.PATH.split(path.delimiter)
   var nvmPath = _.find(envPATHparts, function(p){
