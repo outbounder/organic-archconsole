@@ -1,3 +1,8 @@
 .row.well(style='font-size: 1.64em;')
   span#status-cwd.pull-left= model.get("cwd")
+  - if(model.get("git_status"))
+    - if(model.get("git_status").clean)
+      span#status-cwd-git.pull-left.alert-success [clean]
+    - else
+      span#status-cwd-git.pull-left.alert-info [has changes]
   span#status-time.pull-right version #{model.get("version")}

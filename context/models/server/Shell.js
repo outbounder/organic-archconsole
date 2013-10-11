@@ -1,3 +1,4 @@
+var util = require("util")
 var _ = require("underscore");
 var glob = require("glob");
 var path = require('path');
@@ -8,6 +9,9 @@ module.exports = function(data){
   _.extend(this, data);
 }
 
+util.inherits(module.exports, require("events").EventEmitter)
+
+
 module.exports.prototype.toJSON = function(){
   return {
     uuid: this.uuid,
@@ -15,8 +19,14 @@ module.exports.prototype.toJSON = function(){
     user: this.user,
     cwd: this.cwd,
     name: this.name,
-    version: this.version
+    version: this.version,
+    git_status: this.git_status
   }
+}
+
+module.exports.prototype.setCwdAndNotify = function(value) {
+  this.cwd = value
+  this.emit("cwd:changed", value)
 }
 
 module.exports.prototype.terminate = function(){
@@ -37,7 +47,7 @@ var searchPath = function(target, match, callback){
         entries.push({match: f.replace(match,""), value: f});
     })
     callback(null, entries);
-  });  
+  });
 }
 
 module.exports.prototype.autocomplete = function(term, callback){
@@ -47,19 +57,19 @@ module.exports.prototype.autocomplete = function(term, callback){
 
   if(term.indexOf(" ") !== -1) {
     var target = term.split(" ").pop(); // last word is the target
-    
+
     // assuming it is a file or directory
     if(target.indexOf("~") === 0)
       target = path.normalize(target.replace("~", this.user.home));
     if(target.indexOf(".") === 0 || (target.indexOf("/") !== 0 && target.indexOf(":\\") !== 1))
       target = path.normalize(path.join(this.cwd,target));
-    
+
     // get match
     var parts = target.split(path.sep);
     match = parts.pop();
     target = parts.join(path.sep)+path.sep; // target should be a directory to be read from
-    
-    paths = paths.concat([target]);  
+
+    paths = paths.concat([target]);
   } else {
     match = term;
     paths = paths.concat([this.cwd]);
@@ -71,9 +81,9 @@ module.exports.prototype.autocomplete = function(term, callback){
   }, function(err, results){
     var entries = [];
     results.forEach(function(r){
-      entries = entries.concat(r)  
+      entries = entries.concat(r)
     });
     callback(entries);
   });
-  
+
 }

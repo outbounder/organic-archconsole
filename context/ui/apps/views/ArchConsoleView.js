@@ -5,7 +5,7 @@ module.exports = Backbone.View.extend({
 
   events: {
   },
-  
+
   initialize: function(options){
     var self = this
     $(window).bind("keydown", this.globalKeyDown.bind(this));
