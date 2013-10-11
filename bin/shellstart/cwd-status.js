@@ -8,17 +8,20 @@ module.exports = function(c, next) {
   shell.on("cwd:changed", function(){
     monocle.unwatchAll()
     repo = gift(shell.cwd)
-    repo.status(function(err, status){
-      shell.git_status = status
-      c.socket.emit("/shells/updated", {uuid: shell.uuid, value: shell.toJSON()});
-    })
+    var updateShell = function(){
+      repo.status(function(err, status){
+        shell.git_status = status
+        repo.branch(function(err, head){
+          shell.git_head = head
+          c.socket.emit("/shells/updated", {uuid: shell.uuid, value: shell.toJSON()});
+        })
+      })
+    }
+    updateShell()
     monocle.watchDirectory({
       root: shell.cwd,
       listener: function(changed){
-        repo.status(function(err, status){
-          shell.git_status = status
-          c.socket.emit("/shells/updated", {uuid: shell.uuid, value: shell.toJSON()});
-        })
+        updateShell()
       },
       complete: function(){
       }

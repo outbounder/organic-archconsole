@@ -5,4 +5,6 @@
       span#status-cwd-git.pull-left.alert-success [clean]
     - else
       span#status-cwd-git.pull-left.alert-info [has changes]
+  - if(model.get("git_head"))
+    span#status-cwd-git_head.pull-left @#{model.get("git_head").name}
   span#status-time.pull-right version #{model.get("version")}
