@@ -7,6 +7,7 @@ var async = require('async');
 
 module.exports = function(data){
   _.extend(this, data);
+  this.currentNodeVersion = process.version
 }
 
 util.inherits(module.exports, require("events").EventEmitter)
