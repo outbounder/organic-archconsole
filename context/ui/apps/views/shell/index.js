@@ -8,16 +8,17 @@ module.exports = Backbone.View.extend({
   initialize: function(){
     var self = this
 
-    self.dockedAtBottom = true
-    $(window).scroll(function(){
+    self.model.on("change:dockedAtBottom", this.updateDocketAtBottomIndicator, this)
+    self.model.set("dockedAtBottom", true)
+    $(window).scroll(function(e){
       if($(window).scrollTop() + $(window).height() == $(document).height())
-        self.dockedAtBottom = true
+        self.model.set("dockedAtBottom",true)
       if($(window).scrollTop() + $(window).height() < $(document).height()-$(window).height()/4)
-        self.dockedAtBottom = false
+        self.model.set("dockedAtBottom",false)
     })
 
     var scrollToBottom = function(){
-      if(self.dockedAtBottom)
+      if(self.model.get("dockedAtBottom"))
         window.scrollTo(0, document.body.scrollHeight);
     }
 
@@ -57,12 +58,12 @@ module.exports = Backbone.View.extend({
   globalKeypress: function(e) {
     if(e.keyCode == 32 && e.ctrlKey) {
       if(this.commandInput.hasFocus()) {
-        this.dockedAtBottom = false
         this.commandInput.blur()
+        this.model.set("dockedAtBottom", false)
       } else {
-        this.dockedAtBottom = true
         this.commandInput.focus()
         window.scrollTo(0, document.body.scrollHeight);
+        this.model.set("dockedAtBottom", true)
       }
     }
   },
@@ -77,12 +78,23 @@ module.exports = Backbone.View.extend({
       model: this.model
     }));
   },
+  updateDocketAtBottomIndicator: function(){
+    if(this.model.get("dockedAtBottom"))
+      this.$(".dockedAtBottom").show()
+    else
+      this.$(".dockedAtBottom").hide()
+  },
   render: function(){
+    var self = this
     this.$el.html(this.template());
     this.updateStatusBar()
     this.commandInput = new CommandInput({model: this.model.createNewCommand()});
     this.$el.find(".commandContainer").append(this.commandInput.render().el);
     this.commandInput.postRender()
+    this.commandInput.on("focus", function(){
+      window.scrollTo(0, document.body.scrollHeight);
+      self.model.set("dockedAtBottom", true)
+    })
     window.scrollTo(0, document.body.scrollHeight);
     return this;
   }

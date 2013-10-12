@@ -55,7 +55,10 @@ var splitByCommand = function(execCmd /* Reaction for executing a command */){
         extendedC.data.value = cmd
         extendedC.pipeToClients = true
         extendedC.pipeInputFromClients = true
-        execCmd(extendedC, next)
+        execCmd(extendedC, function(err){
+          if(err instanceof Error) return next(err)
+          next()
+        })
       }
     }, function(err){
       if(err) c.err = err

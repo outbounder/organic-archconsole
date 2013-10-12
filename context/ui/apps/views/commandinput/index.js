@@ -4,11 +4,15 @@ module.exports = Backbone.View.extend({
   template: require("./index.jade"),
 
   events: {
-    "keydown :input": "keydown"
+    "keydown :input": "keydown",
+    "focus :input": "emitFocus"
   },
   initialize: function(){
     this.input_history = []
     this.started = {}
+  },
+  emitFocus: function(){
+    this.trigger("focus");
   },
   hasFocus: function(){
     return this.$el.find("input").is(":focus")
