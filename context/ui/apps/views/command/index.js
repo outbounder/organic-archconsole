@@ -1,9 +1,12 @@
+var Terminal = require("term.js/src/term")
+
 module.exports = Backbone.View.extend({
   template: require("./index.jade"),
 
   events: {
     "click .btnRemove": "terminateCommand",
-    "click .btnRestart": "restartCommand"
+    "click .btnRestart": "restartCommand",
+    "click .result": "focusResult",
   },
 
   initialize: function(){
@@ -12,6 +15,12 @@ module.exports = Backbone.View.extend({
     this.model.on("terminated", this.terminated, this)
     this.model.on("bindkeyonce", this.bindkeyonce, this)
     this.model.on("bindkey", this.bindkey, this)
+  },
+  focusResult: function(){
+    if(this.model.get("isPTY"))
+      this.terminal.focus()
+    else
+      this.$el.find(".result").focus()
   },
   bindkey: function(keySequence, cmd_id) {
     var handler = function(){
@@ -36,10 +45,27 @@ module.exports = Backbone.View.extend({
     self.model.set("running", true)
     this.$el.find(".input").html(self.model.get("value"))
     this.$el.find(".sticky").waypoint('sticky')
+
+
+    if(this.model.get("isPTY")) {
+      var $result = this.$el.find(".result").hide()
+      var $terminal = this.$el.find(".terminal").show()
+      this.terminal = new Terminal({
+        useStyle: false
+      })
+      this.terminal.open($terminal[0])
+      this.terminal.element.style.backgroundColor = this.terminal.colors[257];
+      this.terminal.element.style.color = this.terminal.colors[256];
+      this.terminal.on("data", function(data){
+        archconsole.emit("/commands/"+self.model.get("uuid")+"/input", data)
+      })
+    }
   },
   output : function(chunk){
-    this.$el.find(".result").show()
-    this.$el.find(".result").append(chunk);
+    if(!this.model.get("isPTY"))
+      this.$el.find(".result").append(chunk);
+    else
+      this.terminal.write(chunk)
   },
   terminateCommand: function(){
     archconsole.emit("/commands", {name: "/terminate", uuid: this.model.get("uuid")})

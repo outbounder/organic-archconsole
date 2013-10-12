@@ -1,5 +1,6 @@
 var _ = require("underscore");
 var spawn = require("child_process").spawn;
+var fs = require("fs");
 var path = require("path");
 var util = require("util")
 var EventEmitter = require("events").EventEmitter
@@ -44,12 +45,42 @@ module.exports.prototype.toJSON = function(){
     shelluuid: this.shelluuid,
     value: this.value,
     finished: this.finished,
-    cwd: this.cwd
+    cwd: this.cwd,
+    isPTY: this.isPTY
   }
 }
 
 module.exports.prototype.start = function(){
+  if(this.isPTY)
+    this.startWithPTY()
+  else
+    this.startChild()
+}
+
+module.exports.prototype.startWithPTY = function(){
+  var self = this
+  var pty = require('pty.js')
+
+  var options = {
+    name: 'xterm-color',
+    cols: 80,
+    rows: 30,
+    cwd: this.cwd || self.shell.cwd,
+    env: _.extend({}, self.shell.env, this.env)
+  };
+
+  var args = _.compact(this.value.split(" "))
+  var cmd = args.shift()
+  joinQuotedArgs(args)
+  self.childProcess = pty.spawn(cmd, args, options)
+
+  self.stdin = self.childProcess.stdin;
+  self.stdout = self.childProcess.stdout;
+}
+
+module.exports.prototype.startChild = function(){
   var self = this;
+
   var options = {
     cwd: this.cwd || self.shell.cwd,
     env: _.extend({}, self.shell.env, this.env),
