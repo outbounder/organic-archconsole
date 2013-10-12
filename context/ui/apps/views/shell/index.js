@@ -59,8 +59,11 @@ module.exports = Backbone.View.extend({
       if(this.commandInput.hasFocus()) {
         this.dockedAtBottom = false
         this.commandInput.blur()
-      } else
+      } else {
+        this.dockedAtBottom = true
         this.commandInput.focus()
+        window.scrollTo(0, document.body.scrollHeight);
+      }
     }
   },
   updateStickyCommands: function(){

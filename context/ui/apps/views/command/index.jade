@@ -1,9 +1,10 @@
 .command
-  a(name= model.cid)
+  - if(model.get("isPTY"))
+    a(name= model.cid)
   .sticky
     .container
       .row-fluid
-        a(href= "#"+model.cid).status.alert.alert-info.span1
+        a.showLatestOutput(href= "#"+model.cid).status.alert.alert-info.span1
         .span9
           .readonly.input.uneditable-input.span9
         a.btnRemove.btn.btn-small x
@@ -12,5 +13,7 @@
     .span1
     .command.output.span9(tabindex="-1")
       pre.well.result.hide(tabindex="-1")
+      - if(!model.get("isPTY"))
+        a(name= model.cid)
       .terminal.well.hide(tabindex="-1")
   hr

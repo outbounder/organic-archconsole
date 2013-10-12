@@ -7,6 +7,7 @@ module.exports = Backbone.View.extend({
     "click .btnRemove": "terminateCommand",
     "click .btnRestart": "restartCommand",
     "click .output": "focusResult",
+    "click .showLatestOutput": "showLatestOutput"
   },
 
   initialize: function(){
@@ -15,6 +16,13 @@ module.exports = Backbone.View.extend({
     this.model.on("terminated", this.terminated, this)
     this.model.on("bindkeyonce", this.bindkeyonce, this)
     this.model.on("bindkey", this.bindkey, this)
+  },
+  showLatestOutput: function(){
+    var self = this
+    if(!this.model.get("isPTY"))
+      setTimeout(function(){
+        window.scrollBy(0,-250)
+      }, 100)
   },
   focusResult: function(){
     if(this.model.get("isPTY"))
