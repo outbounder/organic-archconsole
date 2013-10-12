@@ -10,6 +10,9 @@ module.exports = Backbone.View.extend({
     this.input_history = []
     this.started = {}
   },
+  focus: function(){
+    this.$el.find("input").focus()
+  },
   indicateCommandChange: function(data){
     if(data.started)
       this.started[data.uuid] = true

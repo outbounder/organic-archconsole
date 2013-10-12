@@ -53,6 +53,11 @@ module.exports = Backbone.View.extend({
       view.model.trigger("bindkey", data.keySequence, data.cmd_id)
     })
   },
+  globalKeypress: function(e) {
+    if(e.keyCode == 32 && e.ctrlKey) {
+      this.commandInput.focus()
+    }
+  },
   updateStickyCommands: function(){
     var runningCount = 0
     for(var i = 0; i<this.commands.length; i++)
