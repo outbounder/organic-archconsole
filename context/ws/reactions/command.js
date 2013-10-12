@@ -133,7 +133,7 @@ var pipeOutputToClients = function(c, next){
 
 var pipeTerminatedToClients = function(c, next){
   if(c.command.childProcess) {
-    c.command.childProcess.on("exit", function(code, signal){
+    c.command.childProcess.on("close", function(code, signal){
       c.command.code = code
       c.command.signal = signal
       c.socket.emit("/commands/terminated", { uuid: c.command.uuid, code: c.command.code })

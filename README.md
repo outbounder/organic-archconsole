@@ -11,6 +11,7 @@ It is the simplest implementation ever still enough to handle:
 * command chaining (using `&&` and `|` )
 * shell/terminal mode of command execution (supporting `sudo`, `ssh` & etc...)
 thanks to [pty.js](https://github.com/chjj/pty.js/) & [term.js](https://github.com/chjj/term.js/)
+  * this is experimental, don't expect to work, especially on windows
 
 # Why? #
 
@@ -79,29 +80,32 @@ This although not very stable is providing robust support for terminal usage of 
 
 ## Requirements ##
 * nodejs v0.8.14 || v0.10.18 || above
-* unix platform
+* unix/win platform
 
 ## How to install ##
 
     $ git clone repo `target`
     $ cd `target`
     $ npm install
+	
+### Note for windows
+Make sure you have [node-gyp requirements installed](https://github.com/TooTallNate/node-gyp#installation)
 
-### if you don't have angel yet ###
+### using angel to deamonize ###
 
     $ npm install organic-angel -g
 
-## How to start ##
+## starting ##
 
     $ cd `target`
     $ angel Cell start archconsole-staging.js
 
-## How to stop ##
+## stoping ##
 
     $ cd `target`
     $ angel Cell stop archconsole-staging.js
 
-## How to restart ##
+## restarting ##
 
     $ cd `target`
     $ angel Cell restart archconsole-staging.js

@@ -1,9 +1,11 @@
 var _ = require("underscore");
 var spawn = require("child_process").spawn;
+var exec = require("child_process").exec;
 var fs = require("fs");
 var path = require("path");
 var util = require("util")
 var EventEmitter = require("events").EventEmitter
+var os = require("os")
 
 var joinQuotedArgs = function(args) {
   var wholeArgumentBuffer = []
@@ -87,10 +89,13 @@ module.exports.prototype.startChild = function(){
     encoding: "binary"
   };
 
-  var args = _.compact(this.value.split(" "))
-  var cmd = args.shift()
-  joinQuotedArgs(args)
-  self.childProcess = spawn(cmd, args, options);
+  if(os.platform().indexOf("win") === -1) {
+    var args = _.compact(this.value.split(" "))
+    var cmd = args.shift()
+    joinQuotedArgs(args)
+    self.childProcess = spawn(cmd, args, options);
+  } else 
+	self.childProcess = exec(this.value, options)
 
   self.stdin = self.childProcess.stdin;
   self.stdout = self.childProcess.stdout;
