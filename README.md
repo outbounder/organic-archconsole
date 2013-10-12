@@ -53,7 +53,7 @@ See /bin/shellstart/*.js files for more info.
 thanks to [gift](https://github.com/sentientwaffle/gift)
 
 * `alt+shift+g` - runs `git status` on current working directory
-* `ctrl+shift+space` - runs `git pull && git pull` both asynchroniously on current working directory
+* `ctrl+shift+space` - runs `git fetch && git push` both asynchroniously on current working directory
 
 
 ### node
