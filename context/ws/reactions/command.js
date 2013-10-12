@@ -73,11 +73,9 @@ var prepareAsCommand = function(c, next) {
   command.shell = shell;
   command.uuid = uuid();
   command.cwd = command.cwd || shell.cwd;
-  command.isPTY = c.pipeInputFromClients
   c.command = command
   shell.runningCommand = command;
   runtime.commands.push(command);
-
   next && next()
 }
 

@@ -24,7 +24,7 @@ module.exports = Backbone.View.extend({
     var self = this;
     var inputData = {
       name: "/autocomplete",
-      uuid: this.model.get("shelluuid"), 
+      uuid: this.model.get("shelluuid"),
       value: this.$("input").val()
     };
     archconsole.emit("/shells", inputData, function(data){
@@ -45,11 +45,12 @@ module.exports = Backbone.View.extend({
       self.autocompleteView.baseTop = self.$el.position().top;
     });
   },
-  executeCommand: function(){
+  executeCommand: function(options){
     var commandData = {
       shelluuid: this.model.get('shelluuid'),
       value: this.$("input").val(),
-      name: "/execute"
+      name: "/execute",
+      isPTY: options.isPTY
     }
     archconsole.emit("/commands", commandData)
     this.input_history.push(this.$("input").val())
@@ -67,7 +68,7 @@ module.exports = Backbone.View.extend({
       }
       self.autocomplete();
       return;
-    } 
+    }
 
     if(self.autocompleteView) {
       if(!self.autocompleteView.keydown(e)) {
@@ -78,7 +79,7 @@ module.exports = Backbone.View.extend({
         if(self.autocompleteTimeoutID)
           clearTimeout(self.autocompleteTimeoutID);
         self.autocompleteTimeoutID = setTimeout(function(){
-          self.autocomplete();  
+          self.autocomplete();
         }, 50);
       }
       return;
@@ -89,7 +90,7 @@ module.exports = Backbone.View.extend({
       if(this.input_history.length > 0) {
         this.input_history_cursor -= 1
         this.$("input").val(this.input_history[this.input_history_cursor]);
-      } 
+      }
       return;
     }
 
@@ -98,17 +99,17 @@ module.exports = Backbone.View.extend({
       if(this.input_history.length > this.input_history_cursor) {
         this.input_history_cursor += 1
         this.$("input").val(this.input_history[this.input_history_cursor]);
-      } 
+      }
       return;
     }
 
     if(e.keyCode == 13) {
       e.preventDefault();
-      self.executeCommand();
-    } 
+      self.executeCommand({isPTY: e.shiftKey});
+    }
   },
   render: function(){
-    this.$el.html(this.template()); 
+    this.$el.html(this.template());
     return this;
   },
   postRender: function(){

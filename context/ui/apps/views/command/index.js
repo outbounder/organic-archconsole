@@ -6,7 +6,7 @@ module.exports = Backbone.View.extend({
   events: {
     "click .btnRemove": "terminateCommand",
     "click .btnRestart": "restartCommand",
-    "click .result": "focusResult",
+    "click .output": "focusResult",
   },
 
   initialize: function(){
@@ -57,6 +57,11 @@ module.exports = Backbone.View.extend({
       this.terminal.element.style.backgroundColor = this.terminal.colors[257];
       this.terminal.element.style.color = this.terminal.colors[256];
       this.terminal.on("data", function(data){
+        archconsole.emit("/commands/"+self.model.get("uuid")+"/input", data)
+      })
+    } else {
+      this.$el.find(".result").keypress(function(e) {
+        var data = e.charCode
         archconsole.emit("/commands/"+self.model.get("uuid")+"/input", data)
       })
     }

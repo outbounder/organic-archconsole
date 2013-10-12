@@ -115,7 +115,7 @@ module.exports.prototype.monitorSpawnStart = function(data, handler){
 
 module.exports.prototype.terminate = function(){
   if(this.childProcess)
-    this.childProcess.kill();
+    this.childProcess.kill("SIGTERM");
   this.childProcess = null;
   this.stdin = this.stderr = this.stdout = null;
   this.finished = true;
