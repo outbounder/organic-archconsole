@@ -7,16 +7,17 @@ module.exports = Backbone.View.extend({
 
   initialize: function(){
     var self = this
-    var dockedAtBottom = true
+
+    self.dockedAtBottom = true
     $(window).scroll(function(){
       if($(window).scrollTop() + $(window).height() == $(document).height())
-        dockedAtBottom = true
-      if($(window).scrollTop() + $(window).height() < $(document).height()-$(window).height()/2)
-        dockedAtBottom = false
+        self.dockedAtBottom = true
+      if($(window).scrollTop() + $(window).height() < $(document).height()-$(window).height()/4)
+        self.dockedAtBottom = false
     })
 
     var scrollToBottom = function(){
-      if(dockedAtBottom)
+      if(self.dockedAtBottom)
         window.scrollTo(0, document.body.scrollHeight);
     }
 
@@ -55,7 +56,11 @@ module.exports = Backbone.View.extend({
   },
   globalKeypress: function(e) {
     if(e.keyCode == 32 && e.ctrlKey) {
-      this.commandInput.focus()
+      if(this.commandInput.hasFocus()) {
+        this.dockedAtBottom = false
+        this.commandInput.blur()
+      } else
+        this.commandInput.focus()
     }
   },
   updateStickyCommands: function(){

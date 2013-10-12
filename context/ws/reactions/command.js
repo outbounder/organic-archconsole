@@ -142,7 +142,8 @@ var pipeTerminatedToClients = function(c, next){
 var pipeInputFromClients = function(c, next) {
   if(c.pipeInputFromClients && c.command.stdin) {
     var writeInput = function(keyChar){
-      c.command.stdin.write(keyChar)
+      if(c.command.stdin.writable)
+        c.command.stdin.write(keyChar)
     }
     c.socket.on("/commands/"+c.command.uuid+"/input", writeInput)
     c.command.childProcess.on("exit", function(){

@@ -48,7 +48,6 @@ module.exports = Backbone.View.extend({
 
 
     if(this.model.get("isPTY")) {
-      var $result = this.$el.find(".result").hide()
       var $terminal = this.$el.find(".terminal").show()
       this.terminal = new Terminal({
         useStyle: false
@@ -61,15 +60,16 @@ module.exports = Backbone.View.extend({
       })
     } else {
       this.$el.find(".result").keypress(function(e) {
-        var data = e.charCode
+        var data = String.fromCharCode(e.charCode)
         archconsole.emit("/commands/"+self.model.get("uuid")+"/input", data)
       })
     }
   },
   output : function(chunk){
-    if(!this.model.get("isPTY"))
+    if(!this.model.get("isPTY")) {
+      this.$el.find(".result").show()
       this.$el.find(".result").append(chunk);
-    else
+    } else
       this.terminal.write(chunk)
   },
   terminateCommand: function(){

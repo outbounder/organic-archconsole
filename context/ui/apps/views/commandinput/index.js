@@ -10,8 +10,14 @@ module.exports = Backbone.View.extend({
     this.input_history = []
     this.started = {}
   },
+  hasFocus: function(){
+    return this.$el.find("input").is(":focus")
+  },
   focus: function(){
     this.$el.find("input").focus()
+  },
+  blur: function(){
+    this.$el.find("input").blur()
   },
   indicateCommandChange: function(data){
     if(data.started)
