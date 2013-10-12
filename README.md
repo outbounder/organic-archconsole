@@ -9,7 +9,7 @@ It is the simplest implementation ever still enough to handle:
 * very basic server administration via ssh+paired keys
 * simple autocomplete
 * command chaining (using `&&` and `|` )
-* shell/terminal mode of command execution (supporting `sudo`, `ssh` & etc...) 
+* shell/terminal mode of command execution (supporting `sudo`, `ssh` & etc...)
 thanks to [pty.js](https://github.com/chjj/pty.js/) & [term.js](https://github.com/chjj/term.js/)
 
 # Why? #
@@ -50,7 +50,11 @@ See /bin/shellstart/*.js files for more info.
 
 ### git
 
-* `alt+shift+g` - runs `git status`
+thanks to [gift](https://github.com/sentientwaffle/gift)
+
+* `alt+shift+g` - runs `git status` on current working directory
+* `alt+ctrl+shift+space` - runs `git pull && git pull` both asynchroniously on current working directory
+
 
 ### node
 

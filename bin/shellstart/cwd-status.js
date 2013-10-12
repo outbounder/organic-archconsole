@@ -2,6 +2,7 @@ var path = require("path")
 var fs = require('fs')
 var monocle = require('monocle')()
 var gift = require("gift")
+var _ = require("underscore")
 
 module.exports = function(c, next) {
   var shell = c.command.shell
@@ -21,7 +22,12 @@ module.exports = function(c, next) {
           shell.git_status = status
           repo.branch(function(err, head){
             shell.git_head = head
-            c.socket.emit("/shells/updated", {uuid: shell.uuid, value: shell.toJSON()});
+            repo.remotes(function(err, remotes){
+              shell.git_remotes = remotes
+              var remote = _.find(remotes, function(r){ return r.name == "origin/"+head.name})
+              shell.git_sync = remote.commit.id == head.commit.id
+              c.socket.emit("/shells/updated", {uuid: shell.uuid, value: shell.toJSON()});
+            })
           })
         })
       }

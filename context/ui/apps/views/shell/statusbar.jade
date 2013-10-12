@@ -7,4 +7,8 @@
       span#status-cwd-git.pull-left.alert-info [has changes]
   - if(model.get("git_head"))
     span#status-cwd-git_head.pull-left @#{model.get("git_head").name}
+  - if(model.get("git_sync"))
+    span#status-cwd-git_sync.pull-left.alert-success [sync yes]
+  - else
+    span#status-cwd-git_sync.pull-left.alert-info [sync no]
   span#status-time.pull-right version #{model.get("version")}
