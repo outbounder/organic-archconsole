@@ -7,6 +7,6 @@ module.exports = function(c, next) {
   c.output("<p>press 'ctrl+shift+space' to sync with git</p>")
 
   c.bindKey("alt+shift+g", "git status")
-  c.bindKey("ctrl+shift+space", "git pull && git push")
+  c.bindKey("ctrl+shift+space", "git fetch && git push")
   c.terminate()
 }
