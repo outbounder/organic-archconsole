@@ -9,7 +9,8 @@ It is the simplest implementation ever still enough to handle:
 * very basic server administration via ssh+paired keys
 * simple autocomplete
 * command chaining (using `&&` and `|` )
-* shell/terminal mode of command execution (supporting `sudo`, `ssh` & etc...)
+* shell/terminal mode of command execution (supporting `sudo`, `ssh` & etc...) 
+thanks to [pty.js](https://github.com/chjj/pty.js/) & [term.js](https://github.com/chjj/term.js/)
 
 # Why? #
 
