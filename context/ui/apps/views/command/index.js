@@ -19,6 +19,7 @@ module.exports = Backbone.View.extend({
   },
   showLatestOutput: function(){
     var self = this
+    this.$el.find(".status").addClass("alert-info")
     if(!this.model.get("isPTY"))
       setTimeout(function(){
         window.scrollBy(0,-250)
@@ -76,9 +77,12 @@ module.exports = Backbone.View.extend({
   output : function(chunk){
     if(!this.model.get("isPTY")) {
       this.$el.find(".result").show()
+      this.$el.find(".status").removeClass("alert-info")
       this.$el.find(".result").append(chunk);
-    } else
+    } else {
+      this.$el.find(".status").removeClass("alert-info")
       this.terminal.write(chunk)
+    }
   },
   terminateCommand: function(){
     archconsole.emit("/commands", {name: "/terminate", uuid: this.model.get("uuid")})
