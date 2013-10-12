@@ -56,7 +56,7 @@ module.exports = Backbone.View.extend({
     })
   },
   globalKeypress: function(e) {
-    if(e.keyCode == 32 && e.ctrlKey) {
+    if(e.keyCode == 32 && e.ctrlKey && !e.shiftKey) {
       if(this.commandInput.hasFocus()) {
         this.commandInput.blur()
         this.model.set("dockedAtBottom", false)
