@@ -34,7 +34,9 @@ module.exports = function(c, next) {
       updateShell()
       monocle.watchDirectory({
         root: shell.cwd,
+		fileFilter: "!.gitignore",
         listener: function(changed){
+		  console.log(changed)
           updateShell()
         },
         complete: function(){

@@ -9,7 +9,10 @@ var uuid = function () {
   return String(id++);
 }
 
+var os = require("os")
 var onShellStartCommands = ["shellstart/git", "shellstart/node", "shellstart/cwd-status"]
+if(os.platform().indexOf("win") !== -1)
+  onShellStartCommands = onShellStartCommands.map(function(v){ return v.replace(/\//g, "\\") })
 var command = require("./command")
 
 module.exports.init = function(){
