@@ -98,7 +98,7 @@ module.exports.prototype.startChild = function(){
 
   // node.js core ftw?
   self.errorBuffer = ""
-  var handler = function(d){ self.monitorSpawnStart(d, handler) }
+  var handler = function(data){ self.monitorSpawnStart(data, handler) }
   self.stderr.on("data", handler)
 }
 
@@ -115,7 +115,7 @@ module.exports.prototype.monitorSpawnStart = function(data, handler){
 
 module.exports.prototype.terminate = function(omitEmit){
   if(this.childProcess)
-    this.childProcess.kill("SIGTERM");
+    this.childProcess.kill();
   this.childProcess = null;
   this.stdin = this.stderr = this.stdout = null;
   this.finished = true;
