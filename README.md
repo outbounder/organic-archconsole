@@ -53,7 +53,7 @@ See /bin/shellstart/*.js files for more info.
 thanks to [gift](https://github.com/sentientwaffle/gift)
 
 * `alt+shift+g` - runs `git status` on current working directory
-* `ctrl+shift+space` - runs `git fetch && git push` both asynchroniously on current working directory
+* `ctrl+shift+space` - runs `git fetch` on current working directory
 
 
 ### node
@@ -71,7 +71,7 @@ This although not very stable is providing robust support for terminal usage of 
 * swiching current working directory via `cd` triggers file/folders structure monitoring which
   * shows `cwd`'s status accodingly to its git repo (clean or has changes)
   * shows current working branch
-  * shows current sync status to remote branch
+  * shows current sync status accordingly to remote branch
 
 ### nvm
 

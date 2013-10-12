@@ -35,6 +35,10 @@ module.exports = Backbone.View.extend({
       var view = new Command({model: self.model.createNewCommand()})
       self.$el.find(".commandsContainer").append(view.render().el)
       view.model.trigger("start", data.value)
+      if(view.model.get("isPTY")) {
+        self.model.set("dockedAtBottom", false)
+        window.scrollTo(0, document.body.scrollHeight);
+      }
       self.commands.push(view)
       self.lastStartedCommand = view.model
       self.commandInput.indicateCommandChange({started: true, uuid: data.value.uuid})
