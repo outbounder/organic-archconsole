@@ -8,8 +8,14 @@ module.exports = Backbone.View.extend({
   initialize: function(){
     var self = this
 
+    window.onbeforeunload = function(){
+      if(self.commandInput.hasCommandStarted())
+        return "Running commands will be lost..."
+    }
+
     self.model.on("change:dockedAtBottom", this.updateDocketAtBottomIndicator, this)
     self.model.set("dockedAtBottom", true)
+
     $(window).scroll(function(e){
       if($(window).scrollTop() + $(window).height() == $(document).height())
         self.model.set("dockedAtBottom",true)
@@ -24,6 +30,7 @@ module.exports = Backbone.View.extend({
 
     this.model.on("change", this.updateStatusBar, this)
     self.commands = []
+
     archconsole.on("/shells/commandstart", function(data){
       var view = new Command({model: self.model.createNewCommand()})
       self.$el.find(".commandsContainer").append(view.render().el)

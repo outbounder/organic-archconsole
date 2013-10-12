@@ -23,12 +23,15 @@ module.exports = Backbone.View.extend({
   blur: function(){
     this.$el.find("input").blur()
   },
+  hasCommandStarted: function(){
+    return !_.isEmpty(this.started)
+  },
   indicateCommandChange: function(data){
     if(data.started)
       this.started[data.uuid] = true
     else
       delete this.started[data.uuid]
-    if(!_.isEmpty(this.started))
+    if(this.hasCommandStarted())
       this.$el.find(".status").removeClass("alert-info").addClass("alert")
     else
       this.$el.find(".status").removeClass("alert").addClass("alert-info")

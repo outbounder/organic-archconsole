@@ -113,13 +113,14 @@ module.exports.prototype.monitorSpawnStart = function(data, handler){
     self.stderr.removeListener("data", handler)
 }
 
-module.exports.prototype.terminate = function(){
+module.exports.prototype.terminate = function(omitEmit){
   if(this.childProcess)
     this.childProcess.kill("SIGTERM");
   this.childProcess = null;
   this.stdin = this.stderr = this.stdout = null;
   this.finished = true;
-  this.emit("terminate")
+  if(!omitEmit)
+    this.emit("terminate")
 }
 
 module.exports.joinQuotedArgs = joinQuotedArgs
