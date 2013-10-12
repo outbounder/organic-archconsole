@@ -26,6 +26,10 @@ module.exports.init = function(){
       shell.env = _.omit(_.extend({}, process.env), "CELL_MODE")
       runtime.shells.push(shell);
       next(shell.toJSON());
+      c.socket.on("disconnect", function(){
+        shell.terminate();
+        runtime.shells.removeByUUID(shell.uuid);
+      })
 
       onShellStartCommands.forEach(function(cmdPath){
         var extendedC = {
