@@ -37,6 +37,7 @@ module.exports.prototype.terminate = function(){
   if(this.runningCommand)
     this.runningCommand.terminate(true);
   this.runningCommand = null;
+  this.emit("terminated")
 }
 
 var searchPath = function(target, match, callback){

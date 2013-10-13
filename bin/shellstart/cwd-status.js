@@ -6,6 +6,9 @@ var _ = require("underscore")
 
 module.exports = function(c, next) {
   var shell = c.command.shell
+  shell.on("terminated", function(){
+    monocle.unwatchAll()
+  })
   shell.on("cwd:changed", function(){
     monocle.unwatchAll()
     fs.exists(path.join(shell.cwd,".git"), function(found){
@@ -34,7 +37,7 @@ module.exports = function(c, next) {
       updateShell()
       monocle.watchDirectory({
         root: shell.cwd,
-		fileFilter: "!.gitignore",
+		    fileFilter: "!.gitignore",
         listener: function(changed){
           updateShell()
         },
