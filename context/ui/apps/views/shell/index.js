@@ -67,7 +67,6 @@ module.exports = Backbone.View.extend({
     })
   },
   globalKeydown: function(e) {
-    console.log(e)
     if(e.keyCode == 32 && e.ctrlKey && !e.shiftKey && !e.altKey) {
       e.preventDefault()
       if(this.commandInput.hasFocus()) {
