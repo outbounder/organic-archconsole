@@ -5,7 +5,6 @@ var fs = require("fs");
 var path = require("path");
 var util = require("util")
 var EventEmitter = require("events").EventEmitter
-var platform = require("platform")
 
 var joinQuotedArgs = function(args) {
   var wholeArgumentBuffer = []
@@ -110,7 +109,7 @@ module.exports.prototype.startChild = function(){
 
 module.exports.prototype.terminate = function(omitEmit){
   if(this.childProcess) {
-    if(platform.os.family.toLowerCase().indexOf("win") === -1 || platform.os.family.toLowerCase() == "darwin")
+    if(this.shell.platform.os.match("unix"))
       this.childProcess.kill("SIGINT");
     else
       this.childProcess.kill();
