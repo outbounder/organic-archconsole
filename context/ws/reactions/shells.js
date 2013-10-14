@@ -4,13 +4,12 @@ var Shell = require("models/server/Shell");
 var switchByEventname = require("organic-alchemy").ws.switchByEventname
 var _ = require("underscore")
 var fs = require('fs')
+var command = require("./command")
 
 var id = 0;
 var uuid = function () {
   return String(id++);
 }
-
-var command = require("./command")
 
 module.exports.init = function(){
   var archpackage = require(path.join(process.cwd(),"package.json"));
@@ -25,7 +24,7 @@ module.exports.init = function(){
       shell.version = archpackage.version;
       shell.env = _.omit(_.extend({}, process.env), "CELL_MODE")
       runtime.shells.push(shell);
-      next(shell.toJSON());
+      
       c.socket.on("disconnect", function(){
         shell.terminate();
         runtime.shells.removeByUUID(shell.uuid);
@@ -42,6 +41,8 @@ module.exports.init = function(){
           command.execute(extendedC)
         })
       })
+      
+      next(shell.toJSON());
     },
     "/remove": function(c, next){
       var shell = runtime.shells.findByUUID(c.data);

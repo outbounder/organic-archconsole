@@ -105,7 +105,7 @@ var executeCommand = function(c, next) {
   if(localCommands.findByName(cmdExecutable)) {
     c.command.isPTY = false
     c.socket.emit("/shells/commandstart", {uuid: shell.uuid, value: c.command.toJSON()})
-    localCommands.executeByName(cmdExecutable, createCommandContext(c))
+    localCommands.executeByName(cmdExecutable, createCommandContext(c, module.exports))
   } else {
     c.socket.emit("/shells/commandstart", {uuid: shell.uuid, value: c.command.toJSON()})
     c.command.start()

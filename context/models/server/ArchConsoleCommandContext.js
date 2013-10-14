@@ -7,8 +7,7 @@ var generator = {
   }
 }
 
-module.exports = function(c){
-  var commandReaction = require("../../ws/reactions/command")
+module.exports = function(c, commandReaction){
   var socket = c.socket
   var command = c.command
   var trigger_cache = {}

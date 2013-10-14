@@ -112,7 +112,7 @@ module.exports.prototype.terminate = function(omitEmit){
     if(this.shell.platform.os.match("unix"))
       this.childProcess.kill("SIGINT");
     else
-      this.childProcess.kill();
+      this.childProcess.kill("SIGINT");
   }
   this.terminated = true;
   if(!omitEmit)
