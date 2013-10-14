@@ -35,8 +35,7 @@
     "pty.js": "*",
     "term.js": "*",
     "platform": "1.0.0",
-    "node-watch": "https://github.com/xdissent/node-watch/archive/coffee.tar.gz",
-    "coffee-script": "*"
+    "gaze": "*"
   },
   "optionalDependencies": {},
   "engines": {

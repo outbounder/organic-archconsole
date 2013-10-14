@@ -2,7 +2,7 @@ var path = require("path")
 var fs = require('fs')
 var gift = require("gift")
 var _ = require("underscore")
-var watch = require("node-watch")
+var gaze = require("gaze")
 
 module.exports = function(c, next) {
   var shell = c.command.shell
@@ -46,6 +46,7 @@ module.exports = function(c, next) {
       var updateShell = function(){
         if(updateRunning) return
         updateRunning = true
+        console.log("UPDATING STATUS")
         repo.status(function(err, status){
           shell.git_status = status
           repo.branch(function(err, head){
@@ -62,7 +63,8 @@ module.exports = function(c, next) {
       }
       updateShell()
 
-      watcher = watch(shell.cwd, startOnceWrap(function(){
+      watcher = gaze(shell.cwd+"/**/*",{interval: 2500})
+      watcher.on('all', startOnceWrap(function(){
         updateShell()
       }, 1000))
     })
