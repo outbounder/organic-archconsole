@@ -7,11 +7,7 @@ module.exports.init = function(plasma, dna){
     "/execute": require("./command").execute,
     "/terminate": function(c, next){
       var command = runtime.commands.findByUUID(c.data.uuid);
-      if(!command) {
-	    // emit terminated in flavor of the UI.
-	    c.socket.emit("/commands/terminated", { uuid: c.data.uuid, code: -2 })
-	    return;
-      }
+      if(!command) return
       command.terminate();
       runtime.commands.removeByUUID(command.uuid);
       next && next()

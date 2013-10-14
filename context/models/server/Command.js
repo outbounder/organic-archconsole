@@ -87,11 +87,14 @@ module.exports.prototype.startChild = function(){
     env: _.extend({}, self.shell.env, this.env),
     encoding: "binary"
   };
-
-  var args = _.compact(this.value.split(" "))
-  var cmd = args.shift()
-  joinQuotedArgs(args)
-  self.childProcess = spawn(cmd, args, options);
+  
+  if(this.shell.platform.os.match("unix")) {
+    var args = _.compact(this.value.split(" "))
+    var cmd = args.shift()
+    joinQuotedArgs(args)
+    self.childProcess = spawn(cmd, args, options)
+  } else
+    self.childProcess = exec(this.value, options)
 
   self.childProcess.on("error", function(){
     console.log(self.value)
@@ -108,8 +111,10 @@ module.exports.prototype.terminate = function(omitEmit){
   if(this.childProcess) {
     if(this.shell.platform.os.match("unix"))
       this.childProcess.kill("SIGINT");
-    else 
-      this.childProcess.kill();
+    else {
+      var killCmd = "taskkill /pid "+this.childProcess.pid+" /f /t"
+      exec(killCmd) // windows :?
+    }
   }
   this.terminated = true;
   if(!omitEmit)
