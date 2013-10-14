@@ -1,4 +1,4 @@
-.row.well(style='font-size: 1.64em;')
+.row.well
   span#status-cwd.pull-left= model.get("cwd")
   - if(model.get("git_status"))
     - if(model.get("git_status").clean)

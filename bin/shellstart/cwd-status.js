@@ -7,16 +7,20 @@ module.exports = function(c, next) {
   var shell = c.command.shell
   var intervalID;
   var updating = false
+  var cleanupShellStatus = function(){
+    shell.git_head = null
+    shell.git_status = null
+    shell.git_sync = null
+    shell.git_remotes = null
+    c.socket.emit("/shells/updated", {uuid: shell.uuid, value: shell.toJSON()});
+  }
   var updateShell = function(){
     if(updating) return
     updating = true
     fs.exists(path.join(shell.cwd,".git"), function(found){
       if(!found) {
-        shell.git_head = null
-        shell.git_status = null
-        shell.git_sync = null
-        shell.git_remotes = null
-        c.socket.emit("/shells/updated", {uuid: shell.uuid, value: shell.toJSON()});
+        cleanupShellStatus()
+        updating = false
         return
       }
       repo = gift(shell.cwd)
@@ -50,16 +54,12 @@ module.exports = function(c, next) {
     stopLongPolling()
   })
   shell.on('cwd:changed', function(){
-    shell.git_head = null
-    shell.git_status = null
-    shell.git_sync = null
-    shell.git_remotes = null
-    c.socket.emit("/shells/updated", {uuid: shell.uuid, value: shell.toJSON()});
     startLongPolling()
+    updateShell()
   })
   c.bindKey("ctrl+shift+space", function(){
-    updateShell()
     startLongPolling()
+    updateShell()
   })
   c.output("<p>press ctrl+shift+space to trigger current working directory status sync</p>")
   c.terminate()
