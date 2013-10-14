@@ -66,8 +66,10 @@ module.exports = Backbone.View.extend({
       view.model.trigger("bindkey", data.keySequence, data.cmd_id)
     })
   },
-  globalKeypress: function(e) {
-    if(e.keyCode == 32 && e.ctrlKey && !e.shiftKey) {
+  globalKeydown: function(e) {
+    console.log(e)
+    if(e.keyCode == 32 && e.ctrlKey && !e.shiftKey && !e.altKey) {
+      e.preventDefault()
       if(this.commandInput.hasFocus()) {
         this.commandInput.blur()
         this.model.set("dockedAtBottom", false)

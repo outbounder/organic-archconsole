@@ -8,10 +8,10 @@ module.exports = Backbone.View.extend({
 
   initialize: function(options){
     var self = this
-    $(window).bind("keydown", this.globalKeyDown.bind(this));
-    $(window).bind("keydown", function(e){
-      self.currentShellView.globalKeypress(e)
-    })
+    document.addEventListener("keydown", this.globalKeyDown.bind(this), true);
+    document.addEventListener("keydown", function(e){
+      self.currentShellView.globalKeydown(e)
+    }, true)
     archconsole.on("/shells/updated", function(data){
       self.currentShell.set(data.value);
     });
