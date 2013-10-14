@@ -6,6 +6,12 @@ var _ = require("underscore")
 
 module.exports = function(c, next) {
   var shell = c.command.shell
+  var queueTimeoutID;
+  var queueOnce = function(fn, timeout){
+    if(queueTimeoutID)
+      clearTimeout(queueTimeoutID)
+    queueTimeoutID = setTimeout(fn, timeout)
+  }
   shell.on("terminated", function(){
     monocle.unwatchAll()
   })
@@ -38,9 +44,11 @@ module.exports = function(c, next) {
       monocle.watchDirectory({
         root: shell.cwd,
 		    fileFilter: "!.gitignore",
-        directoryFilter: ["!.git", "!node_modules"],
+        directoryFilter: ["!node_modules"],
         listener: function(changed){
-          updateShell()
+          queueOnce(function(){
+            updateShell()
+          }, 500)
         },
         complete: function(){
         }
