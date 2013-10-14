@@ -38,6 +38,7 @@ module.exports = function(c, next) {
       monocle.watchDirectory({
         root: shell.cwd,
 		    fileFilter: "!.gitignore",
+        directoryFilter: ["!.git", "!node_modules"],
         listener: function(changed){
           updateShell()
         },
