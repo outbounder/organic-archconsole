@@ -31,7 +31,8 @@ module.exports = function(c, next) {
           repo.remotes(function(err, remotes){
             shell.git_remotes = remotes
             var remote = _.find(remotes, function(r){ return r.name == "origin/"+head.name})
-            shell.git_sync = remote.commit.id == head.commit.id
+            if(remote)
+              shell.git_sync = remote.commit.id == head.commit.id
             c.socket.emit("/shells/updated", {uuid: shell.uuid, value: shell.toJSON()});
           })
         })

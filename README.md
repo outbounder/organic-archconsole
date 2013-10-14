@@ -51,10 +51,7 @@ See /bin/shellstart/*.js files for more info.
 
 ### git
 
-thanks to [gift](https://github.com/sentientwaffle/gift)
-
 * `alt+shift+g` - runs `git status` on current working directory
-* `ctrl+shift+space` - runs `git fetch` on current working directory
 
 
 ### node
@@ -69,10 +66,12 @@ This although not very stable is providing robust support for terminal usage of 
 
 ### cwd-status
 
-* swiching current working directory via `cd` triggers file/folders structure monitoring which
-  * shows `cwd`'s status accodingly to its git repo (clean or has changes)
-  * shows current working branch
-  * shows current sync status accordingly to remote branch
+thanks to [gift](https://github.com/sentientwaffle/gift)
+
+* `ctrl+shift+space` - checks current directory and if it is git updates status bar:
+  * shows are there any not committed changes
+  * shows current branch name
+  * shows are there any not pushed or not pulled committs
 
 ### nvm
 
@@ -87,7 +86,7 @@ This although not very stable is providing robust support for terminal usage of 
     $ git clone repo `target`
     $ cd `target`
     $ npm install
-	
+
 ### Note for windows
 Make sure you have [node-gyp requirements installed](https://github.com/TooTallNate/node-gyp#installation)
 
