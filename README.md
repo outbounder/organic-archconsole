@@ -69,9 +69,9 @@ This although not very stable is providing robust support for terminal usage of 
 thanks to [gift](https://github.com/sentientwaffle/gift)
 
 * `ctrl+shift+space` - checks current directory and if it is git updates status bar:
-  * shows are there any not committed changes
+  * shows not committed changes if any
   * shows current branch name
-  * shows are there any not pushed or not pulled committs
+  * shows not pushed or not pulled committs if any
 
 ### nvm
 
