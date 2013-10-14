@@ -31,7 +31,6 @@
     "async": "0.2.9",
     "jade": "0.35.0",
     "shelljs": "0.1.2",
-    "monocle": "1.1.50",
     "gift": "0.0.6",
     "pty.js": "*",
     "term.js": "*"

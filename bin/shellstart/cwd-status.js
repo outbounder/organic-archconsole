@@ -1,22 +1,22 @@
 var path = require("path")
 var fs = require('fs')
-var monocle = require('monocle')()
 var gift = require("gift")
 var _ = require("underscore")
 
 module.exports = function(c, next) {
   var shell = c.command.shell
-  var queueTimeoutID;
-  var queueOnce = function(fn, timeout){
-    if(queueTimeoutID)
-      clearTimeout(queueTimeoutID)
-    queueTimeoutID = setTimeout(fn, timeout)
+  var gitStatusIntervalID;
+  var startOnce = function(fn, interval) {
+    if(gitStatusIntervalID)
+      clearInterval(gitStatusIntervalID)
+    gitStatusIntervalID = setInterval(fn, interval)
   }
   shell.on("terminated", function(){
-    monocle.unwatchAll()
+    if(gitStatusIntervalID)
+      clearInterval(gitStatusIntervalID)
+    gitStatusIntervalID = null
   })
   shell.on("cwd:changed", function(){
-    monocle.unwatchAll()
     fs.exists(path.join(shell.cwd,".git"), function(found){
       if(!found) {
         shell.git_head = null
@@ -41,18 +41,9 @@ module.exports = function(c, next) {
         })
       }
       updateShell()
-      monocle.watchDirectory({
-        root: shell.cwd,
-		    fileFilter: "!.gitignore",
-        directoryFilter: ["!node_modules"],
-        listener: function(changed){
-          queueOnce(function(){
-            updateShell()
-          }, 500)
-        },
-        complete: function(){
-        }
-      })
+      startOnce(function(){
+        updateShell()
+      }, 1000)
     })
   })
   c.output("<p>when current working directory is changed, watcher for git status will be assigned</p>")
