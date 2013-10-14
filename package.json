@@ -35,7 +35,7 @@
     "pty.js": "*",
     "term.js": "*",
     "platform": "1.0.0",
-    "gaze": "*"
+    "gaze": "0.4.2"
   },
   "optionalDependencies": {},
   "engines": {
