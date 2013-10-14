@@ -33,7 +33,8 @@
     "shelljs": "0.1.2",
     "gift": "0.0.6",
     "pty.js": "*",
-    "term.js": "*"
+    "term.js": "*",
+    "platform": "1.0.0"
   },
   "optionalDependencies": {},
   "engines": {

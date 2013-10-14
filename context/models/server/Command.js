@@ -5,7 +5,7 @@ var fs = require("fs");
 var path = require("path");
 var util = require("util")
 var EventEmitter = require("events").EventEmitter
-var os = require("os")
+var platform = require("platform")
 
 var joinQuotedArgs = function(args) {
   var wholeArgumentBuffer = []
@@ -89,12 +89,12 @@ module.exports.prototype.startChild = function(){
     encoding: "binary"
   };
 
-  if(os.platform().indexOf("win") === -1) {
+  if(platform.os.family.toLowerCase().indexOf("win") !== -1) {
     var args = _.compact(this.value.split(" "))
     var cmd = args.shift()
     joinQuotedArgs(args)
     self.childProcess = spawn(cmd, args, options);
-  } else 
+  } else
 	self.childProcess = exec(this.value, options)
 
   self.stdin = self.childProcess.stdin;

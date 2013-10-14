@@ -9,9 +9,10 @@ var uuid = function () {
   return String(id++);
 }
 
-var os = require("os")
+var platform = require("platform")
 var onShellStartCommands = ["shellstart/git", "shellstart/node", "shellstart/cwd-status"]
-if(os.platform().indexOf("win") !== -1)
+console.log(platform.os)
+if(platform.os.family.toLowerCase().indexOf("win") !== -1)
   onShellStartCommands = onShellStartCommands.map(function(v){ return v.replace(/\//g, "\\") })
 var command = require("./command")
 
