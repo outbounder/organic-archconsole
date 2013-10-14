@@ -34,8 +34,7 @@
     "gift": "0.0.6",
     "pty.js": "*",
     "term.js": "*",
-    "platform": "1.0.0",
-    "gaze": "0.4.2"
+    "platform": "1.0.0"
   },
   "optionalDependencies": {},
   "engines": {
