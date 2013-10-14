@@ -22,6 +22,8 @@ module.exports = function(c, next) {
       if(!found) {
         shell.git_head = null
         shell.git_status = null
+        shell.git_sync = false
+        shell.git_remotes = null
         c.socket.emit("/shells/updated", {uuid: shell.uuid, value: shell.toJSON()});
         return
       }
