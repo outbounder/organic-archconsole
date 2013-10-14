@@ -6,6 +6,7 @@ var _ = require("underscore")
 module.exports = function(c, next) {
   var shell = c.command.shell
   var gitStatusIntervalID;
+  var updateRunning = false
   var startOnce = function(fn, interval) {
     if(gitStatusIntervalID)
       clearInterval(gitStatusIntervalID)
@@ -27,6 +28,8 @@ module.exports = function(c, next) {
 
       repo = gift(shell.cwd)
       var updateShell = function(){
+        if(updateRunning) return
+        updateRunning = true
         repo.status(function(err, status){
           shell.git_status = status
           repo.branch(function(err, head){
@@ -35,6 +38,7 @@ module.exports = function(c, next) {
               shell.git_remotes = remotes
               var remote = _.find(remotes, function(r){ return r.name == "origin/"+head.name})
               shell.git_sync = remote.commit.id == head.commit.id
+              updateRunning = false
               c.socket.emit("/shells/updated", {uuid: shell.uuid, value: shell.toJSON()});
             })
           })
