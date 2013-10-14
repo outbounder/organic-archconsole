@@ -11,7 +11,7 @@ module.exports.prototype.load = function(c, next) {
   glob(path.join(c.root, "**", "*.js"), function(err, files){
     if(err) return next && next(err)
     files.forEach(function(file){
-	    if(platform.os.family.toLowerCase().indexOf("win") !== -1)
+	    if(platform.os.family.toLowerCase().indexOf("win") !== -1 && platform.os.family.toLowerCase() != "darwin")
 		    file = file.replace(/\//g, "\\")
       var name = file.replace(".js", "").replace(c.root+path.sep, "")
       console.log(name)

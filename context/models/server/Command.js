@@ -89,13 +89,13 @@ module.exports.prototype.startChild = function(){
     encoding: "binary"
   };
 
-  if(platform.os.family.toLowerCase().indexOf("win") !== -1) {
+  if(platform.os.family.toLowerCase().indexOf("win") === -1 || platform.os.family.toLowerCase() == "darwin") {
     var args = _.compact(this.value.split(" "))
     var cmd = args.shift()
     joinQuotedArgs(args)
     self.childProcess = spawn(cmd, args, options);
   } else
-	self.childProcess = exec(this.value, options)
+	  self.childProcess = exec(this.value, options)
 
   self.stdin = self.childProcess.stdin;
   self.stdout = self.childProcess.stdout;
