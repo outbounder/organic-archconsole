@@ -1,6 +1,6 @@
 var glob = require("glob")
 var path = require("path")
-var platform = require("platform")
+var platform = require("./Platform")
 
 module.exports = function(){
   this.commands_cache = {}
@@ -11,10 +11,10 @@ module.exports.prototype.load = function(c, next) {
   glob(path.join(c.root, "**", "*.js"), function(err, files){
     if(err) return next && next(err)
     files.forEach(function(file){
-	    if(platform.os.family.toLowerCase().indexOf("win") !== -1 && platform.os.family.toLowerCase() != "darwin")
+	    if(platform.os.match("win"))
 		    file = file.replace(/\//g, "\\")
       var name = file.replace(".js", "").replace(c.root+path.sep, "")
-      console.log(name)
+      console.log("found command ", name)
       self.commands_cache[name] = require(file)
     })
   })

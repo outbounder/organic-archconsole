@@ -3,17 +3,13 @@ var runtime = require("models/server/runtime");
 var Shell = require("models/server/Shell");
 var switchByEventname = require("organic-alchemy").ws.switchByEventname
 var _ = require("underscore")
+var fs = require('fs')
 
 var id = 0;
 var uuid = function () {
   return String(id++);
 }
 
-var platform = require("platform")
-var onShellStartCommands = ["shellstart/git", "shellstart/node", "shellstart/cwd-status"]
-console.log(platform.os)
-if(platform.os.family.toLowerCase().indexOf("win") !== -1 && platform.os.family.toLowerCase() != "darwin")
-  onShellStartCommands = onShellStartCommands.map(function(v){ return v.replace(/\//g, "\\") })
 var command = require("./command")
 
 module.exports.init = function(){
@@ -34,16 +30,17 @@ module.exports.init = function(){
         shell.terminate();
         runtime.shells.removeByUUID(shell.uuid);
       })
-
-      onShellStartCommands.forEach(function(cmdPath){
-        var extendedC = {
-          data: {
-            value: cmdPath,
-            shelluuid: shell.uuid
-          },
-          socket: c.socket
-        }
-        command.execute(extendedC)
+      fs.readdir(path.join(process.cwd(),"bin","shellstart"), function(err, files){
+        files.forEach(function(cmdPath){
+          var extendedC = {
+            data: {
+              value: path.join("shellstart", cmdPath.replace(".js", "")),
+              shelluuid: shell.uuid
+            },
+            socket: c.socket
+          }
+          command.execute(extendedC)
+        })
       })
     },
     "/remove": function(c, next){

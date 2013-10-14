@@ -89,7 +89,7 @@ module.exports.prototype.startChild = function(){
     encoding: "binary"
   };
 
-  if(platform.os.family.toLowerCase().indexOf("win") === -1 || platform.os.family.toLowerCase() == "darwin") {
+  if(self.shell.platform.os.match("unix")) {
     var args = _.compact(this.value.split(" "))
     var cmd = args.shift()
     joinQuotedArgs(args)
@@ -97,25 +97,15 @@ module.exports.prototype.startChild = function(){
   } else
 	  self.childProcess = exec(this.value, options)
 
+  self.childProcess.on("error", function(){
+    console.log(self.value)
+    console.log(arguments)
+    self.terminate()
+  })
+
   self.stdin = self.childProcess.stdin;
   self.stdout = self.childProcess.stdout;
   self.stderr = self.childProcess.stderr;
-
-  // node.js core ftw?
-  self.errorBuffer = ""
-  var handler = function(data){ self.monitorSpawnStart(data, handler) }
-  self.stderr.on("data", handler)
-}
-
-module.exports.prototype.monitorSpawnStart = function(data, handler){
-  var self = this
-  self.errorBuffer += data.toString()
-  if(self.errorBuffer.indexOf("execvp") !== -1) {
-    self.childProcess.emit("exit", 1, 0)
-    self.terminate()
-  }
-  if(self.errorBuffer.length > 100)
-    self.stderr.removeListener("data", handler)
 }
 
 module.exports.prototype.terminate = function(omitEmit){
