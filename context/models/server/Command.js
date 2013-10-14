@@ -119,11 +119,13 @@ module.exports.prototype.monitorSpawnStart = function(data, handler){
 }
 
 module.exports.prototype.terminate = function(omitEmit){
-  if(this.childProcess)
-    this.childProcess.kill();
-  this.childProcess = null;
-  this.stdin = this.stderr = this.stdout = null;
-  this.finished = true;
+  if(this.childProcess) {
+    if(platform.os.family.toLowerCase().indexOf("win") === -1 || platform.os.family.toLowerCase() == "darwin")
+      this.childProcess.kill("SIGINT");
+    else
+      this.childProcess.kill();
+  }
+  this.terminated = true;
   if(!omitEmit)
     this.emit("terminate")
 }
