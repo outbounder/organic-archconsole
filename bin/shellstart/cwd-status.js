@@ -2,22 +2,36 @@ var path = require("path")
 var fs = require('fs')
 var gift = require("gift")
 var _ = require("underscore")
+var watch = require("node-watch")
 
 module.exports = function(c, next) {
   var shell = c.command.shell
-  var gitStatusIntervalID;
+  var timeoutID;
   var updateRunning = false
-  var startOnce = function(fn, interval) {
-    if(gitStatusIntervalID)
-      clearInterval(gitStatusIntervalID)
-    gitStatusIntervalID = setInterval(fn, interval)
+  var watcher;
+  var startOnceWrap = function(fn, interval) {
+    return function(){
+      if(timeoutID)
+        clearTimeout(timeoutID)
+      timeoutID = setTimeout(fn, interval)
+    }
+  }
+  var cleanUp = function(){
+    if(watcher) {
+      watcher.close()
+      watcher = null
+    }
+    if(timeoutID) {
+      clearTimeout(timeoutID)
+      timeoutID = null
+    }
   }
   shell.on("terminated", function(){
-    if(gitStatusIntervalID)
-      clearInterval(gitStatusIntervalID)
-    gitStatusIntervalID = null
+    cleanUp()
   })
   shell.on("cwd:changed", function(){
+    cleanUp()
+
     fs.exists(path.join(shell.cwd,".git"), function(found){
       if(!found) {
         shell.git_head = null
@@ -47,9 +61,10 @@ module.exports = function(c, next) {
         })
       }
       updateShell()
-      startOnce(function(){
+
+      watcher = watch(shell.cwd, startOnceWrap(function(){
         updateShell()
-      }, 1000)
+      }, 1000))
     })
   })
   c.output("<p>when current working directory is changed, watcher for git status will be assigned</p>")
