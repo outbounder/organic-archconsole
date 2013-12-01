@@ -1,6 +1,7 @@
 var Angel = require("organic-angel")
 var OutputFormat = require("models/server/OutputFormat");
 var format = new OutputFormat()
+var util = require('util')
 
 var uid = 0
 
@@ -13,12 +14,25 @@ var plotObject = function(obj) {
   })
 }
 
+var OutpuStream = function(c){
+  require("stream").Writable.call(this)
+  this.c = c
+}
+util.inherits(OutpuStream, require("stream").Writable)
+OutpuStream.prototype._write = function(chunk, encoding, callback){
+  this.c.output(chunk.toString())
+  callback()
+}
+
 module.exports = function(c, next) {
   var oldCwd = process.cwd()
   process.chdir(c.command.shell.cwd)
   for(var key in require.cache)
     delete require.cache[key]
+  
   var instance = new Angel()
+  instance.output = new OutpuStream(c)
+
   instance.plasma.on("ready", function(e){
     if(e instanceof Error) {
       c.output(e.toString())
