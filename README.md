@@ -90,24 +90,24 @@ thanks to [gift](https://github.com/sentientwaffle/gift)
 ### Note for windows
 Make sure you have [node-gyp requirements installed](https://github.com/TooTallNate/node-gyp#installation)
 
-### using angel to deamonize ###
+### use angel to manage ###
 
     $ npm install organic-angel -g
 
 ## starting ##
 
     $ cd `target`
-    $ angel Cell start archconsole-staging.js
+    $ angel app start archconsole-staging.js
 
 ## stoping ##
 
     $ cd `target`
-    $ angel Cell stop archconsole-staging.js
+    $ angel app stop archconsole-staging.js
 
 ## restarting ##
 
     $ cd `target`
-    $ angel Cell restart archconsole-staging.js
+    $ angel app restart archconsole-staging.js
 
 # Attention #
 

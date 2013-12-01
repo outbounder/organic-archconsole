@@ -1,4 +1,5 @@
 node_modules
 *.err
 *.out
+*.pid
 build

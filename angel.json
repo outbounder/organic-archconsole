@@ -1,0 +1,9 @@
+{
+  "abilities": [
+    "angelabilities/src/io"
+  ],
+  "scripts": [
+    "angelscripts",
+    "angelscripts-nodeapps"
+  ]
+}

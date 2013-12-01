@@ -23,8 +23,8 @@ module.exports = function(c, commandReaction){
       socket.emit("/commands/output",{uuid: command.uuid, value: value});
       return this
     },
-    terminate: function(){
-      socket.emit("/commands/terminated", {uuid: command.uuid, code: 0});
+    terminate: function(code){
+      socket.emit("/commands/terminated", {uuid: command.uuid, code: code || 0});
       return this
     },
     execute: function(cmdValue, handler) {
