@@ -12,4 +12,6 @@
       span#status-cwd-git_sync.pull-left.alert-success [in sync]
     - else
       span#status-cwd-git_sync.pull-left.alert-info [out of sync]
-  span#status-time.pull-right version #{model.get("version")}
+  span.pull-right node #{model.get("currentNodeVersion")}
+    sub
+      span /a v#{model.get("version")}

@@ -2,7 +2,7 @@
   "author": "Boris Filipov",
   "name": "organic-archconsole",
   "main": "archconsole.js",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "scripts": {
     "test": "jasmine-node ./tests"
   },
@@ -40,6 +40,6 @@
   },
   "optionalDependencies": {},
   "engines": {
-    "node": ">= 0.10.18"
+    "node": ">= 0.11.x"
   }
 }

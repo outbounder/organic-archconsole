@@ -22,6 +22,7 @@ module.exports.prototype.toJSON = function(){
     cwd: this.cwd,
     name: this.name,
     version: this.version,
+    currentNodeVersion: this.currentNodeVersion,
     git_status: this.git_status,
     git_head: this.git_head,
     git_sync: this.git_sync,
