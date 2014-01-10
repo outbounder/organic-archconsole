@@ -34,10 +34,9 @@ In addition it is `organic inside`, which will bring tighter integration with or
   * red - failure occurred.
   * organge/blue - then the command is still running.
 
-* `ctrl+end` - goes to the bottom of the shell and docks there showing the output of last running command
+* `ctrl+space` - goes to the bottom of the shell and toggles command input focus
 * `ctrl+shift+c` - terminates last started command
 * `ctrl+shift+enter` - restarts last started command
-* `ctrl+space` - focuses command input
 
 * when command is still running you can see it on top of the browser window with a number
   * `ctrl+shift+1` - restarts that command with number `1`
