@@ -52,6 +52,9 @@ See /bin/shellstart/*.js files for more info.
 
 * `alt+shift+g` - runs `git status` on current working directory
 
+### ungit
+
+* `alt+shift+enter` - runs `ungit` on current working directory
 
 ### node
 
