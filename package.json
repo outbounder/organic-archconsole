@@ -41,5 +41,10 @@
   "optionalDependencies": {},
   "engines": {
     "node": ">= 0.11.x"
+  },
+  "devDependencies": {
+    "angelabilities": "0.0.1",
+    "angelscripts-nodeapps": "0.0.4",
+    "angelscripts": "0.0.4"
   }
 }

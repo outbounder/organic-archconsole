@@ -1,6 +1,6 @@
 {
   "abilities": [
-    "angelabilities/src/io"
+    "angelabilities/src/io.js"
   ],
   "scripts": [
     "angelscripts",
