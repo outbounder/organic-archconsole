@@ -50,7 +50,10 @@ module.exports = Backbone.View.extend({
         self.autocompleteView = null;
       });
       self.autocompleteView.on("selected", function(entry, index){
-        self.$("input").val(self.$("input").val()+entry.match);
+        if(!entry.full)
+          self.$("input").val(self.$("input").val()+entry.match);
+        else
+          self.$("input").val(entry.match);
         self.autocompleteView.remove();
         self.autocompleteView = null;
       });

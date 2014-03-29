@@ -4,3 +4,4 @@ node_modules
 *.pid
 build
 archconsole-staging.js.out~
+data

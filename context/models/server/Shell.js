@@ -9,6 +9,7 @@ module.exports = function(data){
   _.extend(this, data);
   this.currentNodeVersion = process.version
   this.platform = require("./Platform")
+  this.autocompleteProviders = []
 }
 
 util.inherits(module.exports, require("events").EventEmitter)
@@ -83,14 +84,20 @@ module.exports.prototype.autocomplete = function(term, callback){
     paths = paths.concat(process.env.PATH.split(process.platform == "win32"?';':":"));
   }
 
-  async.map(paths, function(p, callback){
-    searchPath(p, match, callback);
-  }, function(err, results){
-    var entries = [];
-    results.forEach(function(r){
-      entries = entries.concat(r)
-    });
-    callback(entries);
-  });
-
+  async.map(this.autocompleteProviders, function(provider, next){
+    provider(term, match, next)
+  }, function(err, providedResults){
+    async.map(paths, function(p, callback){
+      searchPath(p, match, callback);
+    }, function(err, results){
+      var entries = [];
+      providedResults.forEach(function(r){
+        entries = entries.concat(r)
+      })
+      results.forEach(function(r){
+        entries = entries.concat(r)
+      });
+      callback(entries);
+    });  
+  })
 }
