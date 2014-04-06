@@ -18,7 +18,7 @@ var searchInMemory = function(term, match, next) {
   }
   results = _.sortBy(results, function(entry){
     return entry.hits
-  }).map(function(entry){
+  }).reverse().map(function(entry){
     return {value: "*"+entry.value, match: "cd "+entry.value, full: true}
   })
   next(null, results)
