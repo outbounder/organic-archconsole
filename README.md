@@ -87,9 +87,10 @@ thanks to [gift](https://github.com/sentientwaffle/gift)
 
 hooks `cd` command and remembers visited paths which then are shown in `cd autocomplete`
 
-### editor
+### edit
 
 * `alt+shift+e` - runs `subl` (sublime) editor at current directory
+* `ctrl+alt+shift+e` - runs `subl` (sublime) editor appending current directory
 
 ## How to install ##
 
