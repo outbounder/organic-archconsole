@@ -83,6 +83,14 @@ thanks to [gift](https://github.com/sentientwaffle/gift)
 * nodejs v0.8.14 || v0.10.18 || above
 * unix/win platform
 
+### quick-cd
+
+hooks `cd` command and remembers visited paths which then are shown in `cd autocomplete`
+
+### editor
+
+* `alt+shift+e` - runs `subl` (sublime) editor at current directory
+
 ## How to install ##
 
     $ git clone repo `target`
