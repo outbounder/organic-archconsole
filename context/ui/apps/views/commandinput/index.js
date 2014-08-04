@@ -78,6 +78,7 @@ module.exports = Backbone.View.extend({
   },
   keydown: function(e){
     var self = this;
+    if(e.keyCode == 229) return
 
     if(e.keyCode == 9) { // tab
       e.preventDefault();
