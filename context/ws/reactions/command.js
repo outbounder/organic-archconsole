@@ -83,7 +83,7 @@ var prepareAsCommand = function(c, next) {
 }
 
 var aggregateEnvVars = function(c, next){
-  var pattern = /([A-Z_]+=[_a-zA-Z0-9]+)+/g // TODO better regex
+  var pattern = /([A-Z_]+=[_+a-zA-Z0-9]+)+/g // TODO better regex
   var envVars = c.command.value.match(pattern)
   if(envVars) {
     for(var i = 0; i<envVars.length; i++) {
