@@ -1,0 +1,1 @@
+module.exports.packagejson = require("./package.json")

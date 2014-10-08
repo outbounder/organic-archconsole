@@ -65,6 +65,11 @@ module.exports = Backbone.View.extend({
     });
   },
   executeCommand: function(options){
+    if(this.$("input").val() == "exit") {
+      if(!window.nwrequire) return alert("not executable")
+      var gui = window.nwrequire('nw.gui');
+      return gui.App.quit();
+    }
     var commandData = {
       shelluuid: this.model.get('shelluuid'),
       value: this.$("input").val(),
