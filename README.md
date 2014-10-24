@@ -21,11 +21,16 @@ In addition it is `organic inside`, which will bring tighter integration with or
 
 # How? #
 
-## How to use ##
+## How to use in browser ##
 
-1. start
+1. $ node archconsole.js
 2. open http://localhost:3333/
 3. input terminal command
+
+## how to use in nodewebkit ##
+
+1. $ node archoconsole.js
+2. $ nodewebkit ./
 
 ## Features
 
