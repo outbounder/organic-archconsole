@@ -104,8 +104,10 @@ module.exports = Backbone.View.extend({
     this.$el.find(".commandContainer").append(this.commandInput.render().el);
     this.commandInput.postRender()
     this.commandInput.on("focus", function(){
-      window.scrollTo(0, document.body.scrollHeight);
-      self.model.set("dockedAtBottom", true)
+      if($(window).scrollTop() + $(window).height() > $(document).height()-$(window).height()/4) {
+        window.scrollTo(0, document.body.scrollHeight);
+        self.model.set("dockedAtBottom", true)
+      }
     })
     window.scrollTo(0, document.body.scrollHeight);
     return this;
