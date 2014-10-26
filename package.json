@@ -5,6 +5,7 @@
   "node-main": "nw-archconsole.js",
   "single-instance": false,
   "window": {
+    "title": "archconsole",
     "toolbar": false,
     "frame": false,
     "width": 1000,
@@ -54,6 +55,7 @@
     "pty.js": "*",
     "shelljs": "0.1.2",
     "term.js": "*",
+    "tree-kill": "0.0.6",
     "underscore": "1.4.4"
   },
   "optionalDependencies": {},

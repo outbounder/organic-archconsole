@@ -5,7 +5,7 @@ var fs = require("fs");
 var path = require("path");
 var util = require("util")
 var EventEmitter = require("events").EventEmitter
-var kill = require("killprocess")
+var kill = require("tree-kill")
 
 var joinQuotedArgs = function(args) {
   var wholeArgumentBuffer = []
@@ -113,11 +113,10 @@ module.exports.prototype.startChild = function(){
 module.exports.prototype.terminate = function(omitEmit){
   var self = this
   if(this.childProcess) {
-    kill(this.childProcess.pid, function(){
-      self.terminated = true;
-      if(!omitEmit)
-        self.emit("terminate")
-    })
+    kill(this.childProcess.pid);
+    self.terminated = true;
+    if(!omitEmit)
+      self.emit("terminate")
   }
 }
 

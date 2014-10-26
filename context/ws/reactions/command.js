@@ -124,7 +124,12 @@ var pipeOutputToClients = function(c, next){
       if(data.toString().indexOf("<") !== -1 && (data.toString().indexOf("</") !== -1 || data.toString().indexOf("/>") !== -1))
         c.socket.emit("/commands/output", {uuid: command.uuid, value: data.toString()})
       else
-        c.socket.emit("/commands/output", {uuid: command.uuid, value: format.escapeUnixText(data)})
+        try {
+          c.socket.emit("/commands/output", {uuid: command.uuid, value: format.escapeUnixText(data)})
+        } catch(e){
+          console.error(e)
+          c.socket.emit("/commands/output", {uuid: command.uuid, value: data.toString()})
+        }
     }
     if(command.stdout)
       command.stdout.on("data", emit);
