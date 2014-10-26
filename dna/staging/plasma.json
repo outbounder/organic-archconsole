@@ -7,7 +7,8 @@
     "plugins": ["plasma/bundlecode-plugins/Config","plasma/bundlecode-plugins/Jade"]
   },
   "BundleStyle": {
-    "source": "node_modules/organic-bundlestyle"
+    "source": "node_modules/organic-bundlestyle",
+    "root": "context/ui/style"
   },
   "HttpReactor": {
     "endReactions": [
