@@ -5,6 +5,8 @@ runtime = {};
 
 var User = require("models/client/User");
 
+var ArchConsoleView = require("./views/ArchConsoleView");
+
 archconsole = io.connect(config.endpoint);
 archconsole.emit("/user", {}, function(data){
   runtime.user = new User(data);
@@ -14,4 +16,5 @@ archconsole.emit("/user", {}, function(data){
   view.createNewShell();
 });
 
-var ArchConsoleView = require("./views/ArchConsoleView");
+if(window.isNodeWebkit)
+  document.body.className = "nodewebkit"

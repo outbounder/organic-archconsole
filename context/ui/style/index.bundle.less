@@ -1,7 +1,8 @@
-@import "/vendor/bootstrap.min.css";
-@import "/vendor/bootstrap-responsive.min.css";
-@import "/vendor/termkit.css";
-@import "/vendor/typography.css";
+@import (inline) "./vendor/bootstrap.min.css";
+@import (inline) "./vendor/bootstrap-responsive.min.css";
+@import (inline) "./vendor/termkit.css";
+@import (inline) "./vendor/typography.css";
+@import "./nodewebkit.less";
 
 .rounded-corners (@radius: 5px) {
   -webkit-border-radius: @radius;
@@ -72,3 +73,4 @@ pre {
 input,.cmd,.uneditable-input {
   font-size: 1em;
 }
+
