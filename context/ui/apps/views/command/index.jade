@@ -10,7 +10,7 @@
         a.btnRemove.btn.btn-small x
         a.btnRestart.btn.btn-small r
   .row-fluid
-    .span1
+    .span1= model.getTimestampStr()
     .command.output.span9(tabindex="-1")
       pre.well.result.hide(tabindex="-1")
       - if(!model.get("isPTY"))

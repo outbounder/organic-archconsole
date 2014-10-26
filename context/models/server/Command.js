@@ -47,11 +47,13 @@ module.exports.prototype.toJSON = function(){
     value: this.value,
     finished: this.finished,
     cwd: this.cwd,
-    isPTY: this.isPTY
+    isPTY: this.isPTY,
+    startedAt: this.startedAt
   }
 }
 
 module.exports.prototype.start = function(){
+  this.startedAt = new Date()
   if(this.isPTY)
     this.startWithPTY()
   else
