@@ -3,6 +3,7 @@
   "name": "organic-archconsole",
   "main": "index.html",
   "node-main": "nw-archconsole.js",
+  "single-instance": false,
   "window": {
     "toolbar": false,
     "frame": false,
