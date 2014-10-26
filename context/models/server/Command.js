@@ -5,6 +5,7 @@ var fs = require("fs");
 var path = require("path");
 var util = require("util")
 var EventEmitter = require("events").EventEmitter
+var kill = require("killprocess")
 
 var joinQuotedArgs = function(args) {
   var wholeArgumentBuffer = []
@@ -110,17 +111,14 @@ module.exports.prototype.startChild = function(){
 }
 
 module.exports.prototype.terminate = function(omitEmit){
+  var self = this
   if(this.childProcess) {
-    if(this.shell.platform.os.match("unix"))
-      this.childProcess.kill("SIGINT");
-    else {
-      var killCmd = "taskkill /pid "+this.childProcess.pid+" /f /t"
-      exec(killCmd) // windows :?
-    }
+    kill(this.childProcess.pid, function(){
+      self.terminated = true;
+      if(!omitEmit)
+        self.emit("terminate")
+    })
   }
-  this.terminated = true;
-  if(!omitEmit)
-    this.emit("terminate")
 }
 
 module.exports.joinQuotedArgs = joinQuotedArgs
