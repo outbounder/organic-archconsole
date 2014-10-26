@@ -13,6 +13,8 @@ var uuid = function () {
 
 module.exports.init = function(){
   var archpackage = require(path.join(process.cwd(),"package.json"));
+  var shellSockets = {}
+
   return switchByEventname({
     "/create": function(c, next){
       var shell = new Shell(c.data);
@@ -24,8 +26,13 @@ module.exports.init = function(){
       shell.version = archpackage.version;
       shell.env = _.omit(_.extend({}, process.env), "CELL_MODE")
       runtime.shells.push(shell);
+      for(var key in shellSockets)
+        shellSockets[key].emit("/shells/active", {active: false})
+      shellSockets[shell.uuid] = c.socket
+      c.socket.emit("/shells/active", {active: true})
       
       c.socket.on("disconnect", function(){
+        delete shellSockets[shell.uuid]
         shell.terminate();
         runtime.shells.removeByUUID(shell.uuid);
       })
@@ -51,6 +58,7 @@ module.exports.init = function(){
         return;
       }
 
+      delete shellSockets[shell.uuid]
       shell.terminate();
       runtime.shells.removeByUUID(c.data);
 

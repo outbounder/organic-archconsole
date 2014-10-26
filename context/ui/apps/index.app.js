@@ -16,5 +16,35 @@ archconsole.emit("/user", {}, function(data){
   view.createNewShell();
 });
 
-if(window.isNodeWebkit)
+if(window.isNodeWebkit) {
   document.body.className = "nodewebkit"
+  var gui = nwrequire('nw.gui')
+  var win = gui.Window.get()
+  archconsole.on("/shells/updated", function(data){
+    win.title = data.value.cwd.split("/").pop()
+  })
+  archconsole.on("/shells/active", function(data){
+    if(data.active == true) {
+      var option = {
+        key : "Ctrl+Shift+A",
+        active : function() {
+          win.show()
+          win.focus()
+        },
+        failed : function(msg) {
+          // :(, fail to register the |key| or couldn't parse the |key|.
+          alert(msg);
+        }
+      };
+
+      // Create a shortcut with |option|.
+      window.activateShortcut = new gui.Shortcut(option);
+      // Register global desktop shortcut, which can work without focus.
+      gui.App.registerGlobalHotKey(window.activateShortcut);
+    } else {
+      if(window.activateShortcut)
+        gui.App.unregisterGlobalHotKey(window.activateShortcut)
+      window.activateShortcut = null
+    } 
+  })
+}
