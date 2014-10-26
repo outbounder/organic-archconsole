@@ -3,11 +3,12 @@
 <title>Hello World!</title>
 <script>
   var boot = function(){
-    setTimeout(function(){
-      window.location = "http://localhost:3000/"
-    }, 1000)
+    process.mainModule.exports.getPort(function(err, port){
+      if(err) return alert(err)
+      window.location = "http://localhost:"+port
+    })
   }
-</script
+</script>
 </head>
 <body onload="boot()">
   loading archconsole <script>document.write(process.mainModule.exports.packagejson.version); </script>
