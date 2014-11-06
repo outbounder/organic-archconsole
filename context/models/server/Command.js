@@ -113,7 +113,7 @@ module.exports.prototype.startChild = function(){
 module.exports.prototype.terminate = function(omitEmit){
   var self = this
   if(this.childProcess) {
-    kill(this.childProcess.pid);
+    process.kill(this.childProcess.pid, "SIGINT");
     self.terminated = true;
     if(!omitEmit)
       self.emit("terminate")

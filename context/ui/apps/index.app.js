@@ -17,6 +17,9 @@ archconsole.emit("/user", {}, function(data){
 });
 
 if(window.isNodeWebkit) {
+
+  require("./vendor/nodewebkit/isfocused")
+
   document.body.className = "nodewebkit"
   var gui = nwrequire('nw.gui')
   var win = gui.Window.get()
@@ -26,10 +29,15 @@ if(window.isNodeWebkit) {
   archconsole.on("/shells/active", function(data){
     if(data.active == true) {
       var option = {
-        key : "Ctrl+Shift+A",
+        key : "Ctrl+Alt+A",
         active : function() {
-          win.show()
-          win.focus()
+          if(window.frame.isFocused) {
+            console.log("HIDE?")
+            win.hide()
+          } else {
+            win.show()
+            win.focus()
+          }
         },
         failed : function(msg) {
           // :(, fail to register the |key| or couldn't parse the |key|.

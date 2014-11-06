@@ -3,11 +3,11 @@
   "name": "organic-archconsole",
   "main": "index.html",
   "node-main": "nw-archconsole.js",
-  "single-instance": false,
+  "single-instance": true,
   "window": {
     "title": "archconsole",
     "toolbar": false,
-    "frame": false,
+    "frame": true,
     "width": 1000,
     "height": 800,
     "position": "mouse",
