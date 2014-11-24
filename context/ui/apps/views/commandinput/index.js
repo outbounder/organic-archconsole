@@ -8,8 +8,13 @@ module.exports = Backbone.View.extend({
     "focus :input": "emitFocus"
   },
   initialize: function(){
+    var self = this
     this.input_history = []
     this.started = {}
+    archconsole.on("/autocomplete/results", function(data){
+      self.mode = "autocompleteResults"
+      self.showAutoComplete(data)
+    })
   },
   emitFocus: function(){
     this.trigger("focus");
@@ -36,33 +41,56 @@ module.exports = Backbone.View.extend({
     else
       this.$el.find(".status").removeClass("alert").addClass("alert-info")
   },
-  autocomplete: function(){
+  autocomplete: function(options){
     var self = this;
-    var inputData = {
-      name: "/autocomplete",
-      uuid: this.model.get("shelluuid"),
-      value: this.$("input").val()
-    };
-    archconsole.emit("/shells", inputData, function(data){
-      self.autocompleteView = new CommandAutocompleteView({model: data});
-      self.autocompleteView.on("canceled", function(){
-        self.autocompleteView.remove();
-        self.autocompleteView = null;
+    if(self.mode != "autocompleteResults") {
+      var inputData = {
+        name: "/autocomplete",
+        uuid: this.model.get("shelluuid"),
+        value: this.$("input").val()
+      };
+      archconsole.emit("/shells", inputData, function(data){
+        self.showAutoComplete(data)
       });
-      self.autocompleteView.on("selected", function(entry, index){
-        if(!entry.full)
-          self.$("input").val(self.$("input").val()+entry.match);
-        else
-          self.$("input").val(entry.match);
-        self.autocompleteView.remove();
-        self.autocompleteView = null;
-      });
-      self.$(".autocompleteContainer").append(self.autocompleteView.render().el);
-      self.autocompleteView.selectFirst();
-      self.autocompleteView.$el.css("top", self.$el.position().top);
-      self.autocompleteView.$el.css("left", self.$el.position().left+80+self.$("input").val().length*7);
-      self.autocompleteView.baseTop = self.$el.position().top;
+    } else {
+      archconsole.emit("/autocomplete/results", {term: self.getValue()}, function(data){
+        self.showAutoComplete(data)
+      })
+    }
+  },
+  showAutoComplete: function(data){
+    var self = this
+    self.autocompleteView = new CommandAutocompleteView({model: data});
+    self.autocompleteView.on("canceled", function(){
+      self.autocompleteView.remove();
+      self.autocompleteView = null;
+      self.mode = ""
+      $("body").css("overflow", "visible");
+      self.$(".cmd").removeClass("autocomplete-shown")
     });
+    self.autocompleteView.on("selected", function(entry, index){
+      if(!entry.full)
+        self.$("input").val(self.$("input").val()+entry.match);
+      else
+        self.$("input").val(entry.match);
+      self.autocompleteView.remove();
+      self.autocompleteView = null;
+      self.mode = ""
+      $("body").css("overflow", "visible");
+      self.$(".cmd").removeClass("autocomplete-shown")
+      if(entry.execute)
+        self.executeCommand(entry.execute)
+    });
+    self.$(".autocompleteContainer").append(self.autocompleteView.render().el);
+    self.$(".cmd").addClass("autocomplete-shown")
+    $("body").css("overflow", "hidden");
+    self.autocompleteView.selectFirst();
+    self.autocompleteView.$el.css("top", self.$el.position().top);
+    self.autocompleteView.$el.css("left", self.$el.position().left+80+self.$("input").val().length*7);
+    self.autocompleteView.baseTop = self.$el.position().top;
+  },
+  getValue: function(){
+    return this.$("input").val()
   },
   executeCommand: function(options){
     if(this.$("input").val() == "exit") {
@@ -91,6 +119,7 @@ module.exports = Backbone.View.extend({
         self.autocompleteView.selectCurrent();
         return;
       }
+      self.mode = ""
       self.autocomplete();
       return;
     }

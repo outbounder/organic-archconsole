@@ -58,13 +58,35 @@ module.exports = Backbone.View.extend({
       scrollToBottom()
     })
     archconsole.on("/commands/bindkeyonce", function(data){
-      var view = _.find(self.commands, function(v){ return v.model.get("uuid") == data.uuid})
-      view.model.trigger("bindkeyonce", data.keySequence, data.cmd_id)
+      self.bindKeyOnce(data.keySequence, data.cmd_id)
     })
     archconsole.on("/commands/bindkey", function(data){
-      var view = _.find(self.commands, function(v){ return v.model.get("uuid") == data.uuid})
-      view.model.trigger("bindkey", data.keySequence, data.cmd_id)
+      self.bindKey(data.keySequence, data.cmd_id)
     })
+  },
+  getKeyComboCtx: function(){
+    return {
+      commandinput: {
+        value: this.commandInput?this.commandInput.getValue():""
+      }
+    }
+  },
+  bindKey: function(keySequence, cmd_id) {
+    var self = this
+    var handler = function(){
+      archconsole.emit("/commands/trigger/"+cmd_id, self.getKeyComboCtx())
+      return false
+    }
+    var keyCombo = KeyboardJS.on(keySequence, handler)
+  },
+  bindKeyOnce: function(keySequence, cmd_id) {
+    var self = this
+    var handler = function(){
+      archconsole.emit("/commands/trigger/"+cmd_id, self.getKeyComboCtx())
+      keyCombo.clear()
+      return false
+    }
+    var keyCombo = KeyboardJS.on(keySequence, handler)
   },
   globalKeydown: function(e) {
     if(e.keyCode == 32 && e.ctrlKey && !e.shiftKey && !e.altKey) {

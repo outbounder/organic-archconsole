@@ -26,9 +26,10 @@ module.exports.init = function(){
       shell.version = archpackage.version;
       shell.env = _.omit(_.extend({}, process.env), "CELL_MODE")
       runtime.shells.push(shell);
+      shellSockets[shell.uuid] = c.socket
+      
       for(var key in shellSockets)
         shellSockets[key].emit("/shells/active", {active: false})
-      shellSockets[shell.uuid] = c.socket
       c.socket.emit("/shells/active", {active: true})
       
       c.socket.on("disconnect", function(){

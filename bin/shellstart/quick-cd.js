@@ -5,21 +5,22 @@ var _ = require("underscore")
 var memory = {}
 var memoryFilePath = process.cwd()+"/data/cd-memory.json"
 
-var searchInMemory = function(term, match, next) {
-  if(match.length == 0) return next(null, [])
-  if(term.indexOf("cd") != 0) return next(null, [])
-  if(term === "cd ") return next(null, [])
-
+var searchInMemory = function(term, next) {
   var results = []
   for(var key in memory) {
     var target = key.split(path.sep).pop()
-    if(target && target.indexOf(match) != -1)
+    if(target && target.indexOf(term) != -1)
       results.push({value: key, hits: memory[key]})
   }
   results = _.sortBy(results, function(entry){
     return entry.hits
   }).reverse().map(function(entry){
-    return {value: "*"+entry.value, match: "cd "+entry.value, full: true}
+    return {
+      value: "*"+entry.value, 
+      match: "cd "+entry.value, 
+      full: true,
+      execute: {isPTY: false}
+    }
   })
   next(null, results)
 }
@@ -36,9 +37,20 @@ var rememberCwd = function(cwd) {
 
 var boot = function(c, next) {
   var shell = c.command.shell
-  shell.autocompleteProviders.push(searchInMemory)
   shell.on('cwd:changed', function(){
     rememberCwd(shell.cwd)
+  })
+  c.output("<p>press 'ctrl+alt+z' to cd into visited directiry </p>")
+
+  c.bindKey("ctrl+alt+z", function(triggerCtx){
+    searchInMemory(triggerCtx.commandinput.value, function(err, data){
+      c.socket.emit("/autocomplete/results", data)  
+    })
+  })
+  c.socket.on("/autocomplete/results", function(data, callback){
+    searchInMemory(data.term, function(err, data){
+      callback(data)
+    })
   })
   c.terminate()
 }
