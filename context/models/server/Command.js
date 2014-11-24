@@ -113,11 +113,15 @@ module.exports.prototype.startChild = function(){
 module.exports.prototype.terminate = function(omitEmit){
   var self = this
   if(this.childProcess) {
-    process.kill(this.childProcess.pid, "SIGINT");
-    self.terminated = true;
-    if(!omitEmit)
-      self.emit("terminate")
+    try {
+      process.kill(this.childProcess.pid, "SIGINT");
+    } catch(err){
+      // silently do nothing if pid is not found
+    }
   }
+  self.terminated = true;
+  if(!omitEmit)
+    self.emit("terminate")
 }
 
 module.exports.joinQuotedArgs = joinQuotedArgs
