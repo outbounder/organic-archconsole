@@ -8,7 +8,8 @@ module.exports = Backbone.View.extend({
     this.$("li[data-id="+this.currentAutocompleteItemIndex+"]").addClass("active");
   },
   selectCurrent: function(){
-    this.trigger("selected", this.model[this.currentAutocompleteItemIndex], this.currentAutocompleteItemIndex);
+    if(this.model[this.currentAutocompleteItemIndex])
+      this.trigger("selected", this.model[this.currentAutocompleteItemIndex], this.currentAutocompleteItemIndex);
   },
   keydown: function(e){
     if(e.keyCode == 27){
