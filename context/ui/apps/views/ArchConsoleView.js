@@ -33,7 +33,10 @@ module.exports = Backbone.View.extend({
   },
   createNewShell: function(){
     var self = this;
-    archconsole.emit("/shells", {"name": "/create"}, function(shellData){
+    archconsole.emit("/shells", {
+      "name": "/create",
+      "clientType": window.isNodeWebkit?"nodewebkit":"browser"
+    }, function(shellData){
       var shell = self.currentShell = new Shell(shellData);
       self.currentShellView = new ShellView({model: shell, el: $(".shellContainer")});
       self.currentShellView.visible = true;

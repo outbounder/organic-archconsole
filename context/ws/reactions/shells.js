@@ -15,6 +15,13 @@ module.exports.init = function(){
   var archpackage = require(path.join(process.cwd(),"package.json"));
   var shellSockets = {}
 
+  var notifyDeactivatedNodewebkitClients = function(){
+    runtime.shells.forEach(function(shell){
+      if(shell.clientType == "nodewebkit")
+        shellSockets[shell.uuid].emit("/shells/active", {active: false})
+    })
+  }
+
   return switchByEventname({
     "/create": function(c, next){
       var shell = new Shell(c.data);
@@ -25,12 +32,14 @@ module.exports.init = function(){
       shell.commandsHistory = null;
       shell.version = archpackage.version;
       shell.env = _.omit(_.extend({}, process.env), "CELL_MODE")
+            
+      if(shell.clientType == "nodewebkit") {
+        notifyDeactivatedNodewebkitClients()
+        c.socket.emit("/shells/active", {active: true})
+      }
+
       runtime.shells.push(shell);
       shellSockets[shell.uuid] = c.socket
-      
-      for(var key in shellSockets)
-        shellSockets[key].emit("/shells/active", {active: false})
-      c.socket.emit("/shells/active", {active: true})
       
       c.socket.on("disconnect", function(){
         delete shellSockets[shell.uuid]
@@ -70,6 +79,11 @@ module.exports.init = function(){
       if(!shells)
         return;
       shells.autocomplete(c.data.value, next);
+    },
+    "/active": function(c, next) {
+      console.log("SHELL ACTIVATED ", c)
+      notifyDeactivatedNodewebkitClients()
+      shellSockets[c.data.uuid].emit("/shells/active", {active: true})
     }
   })
 }

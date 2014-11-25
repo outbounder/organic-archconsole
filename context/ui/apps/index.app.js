@@ -17,26 +17,32 @@ archconsole.emit("/user", {}, function(data){
 });
 
 if(window.isNodeWebkit) {
-
+  var gui = nwrequire("nw.gui")
+  window.frame = gui.Window.get();
   require("./vendor/nodewebkit/isfocused")
 
   document.body.className = "nodewebkit"
-  var gui = nwrequire('nw.gui')
-  var win = gui.Window.get()
   archconsole.on("/shells/updated", function(data){
-    win.title = data.value.cwd.split("/").pop()
+    window.frame.title = data.value.cwd.split("/").pop()
+  })
+  window.frame.on("focus", function(){
+    console.log("FOCUSED, sending active")
+    archconsole.emit("/shells", {
+      "name": "/active",
+      "uuid": runtime.archconsoleView.currentShellView.model.get("uuid")
+    })
   })
   archconsole.on("/shells/active", function(data){
     if(data.active == true) {
+      console.log("ACTIVE")
       var option = {
         key : "Ctrl+Alt+A",
         active : function() {
           if(window.frame.isFocused) {
-            console.log("HIDE?")
-            win.hide()
+            window.frame.minimize()
           } else {
-            win.show()
-            win.focus()
+            window.frame.restore()
+            window.frame.focus()
           }
         },
         failed : function(msg) {
@@ -50,6 +56,7 @@ if(window.isNodeWebkit) {
       // Register global desktop shortcut, which can work without focus.
       gui.App.registerGlobalHotKey(window.activateShortcut);
     } else {
+      console.log("NOT ACTIVE")
       if(window.activateShortcut)
         gui.App.unregisterGlobalHotKey(window.activateShortcut)
       window.activateShortcut = null

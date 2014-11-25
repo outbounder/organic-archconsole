@@ -1,9 +1,8 @@
 (function() {
-  window.frame = nwrequire("nw.gui").Window.get();
+  if(!window.frame) return console.warn("window.frame is not found")
   window.frame.isFocused = true;
  
   var windowFocusHandler = function() {
-      console.log("FOCUS")
       window.frame.isFocused = true;
     }
     , windowBlurHandler = function() {

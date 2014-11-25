@@ -27,7 +27,8 @@ module.exports.prototype.toJSON = function(){
     git_status: this.git_status,
     git_head: this.git_head,
     git_sync: this.git_sync,
-    git_remotes: this.git_remotes
+    git_remotes: this.git_remotes,
+    clientType: this.clientType
   }
 }
 
