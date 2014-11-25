@@ -34,6 +34,12 @@ In addition it is `organic inside`, which will bring tighter integration with or
 
 ## Features
 
+* scripting of custom commands and plugins in javascript
+
+  See /bin/shellstart/*.js files for more info.
+
+### shortcut combos
+
 * every command has a marker on its left.
   * green - then command completed successfully.
   * red - failure occurred.
@@ -46,12 +52,6 @@ In addition it is `organic inside`, which will bring tighter integration with or
 * when command is still running you can see it on top of the browser window with a number
   * `ctrl+shift+1` - restarts that command with number `1`
   * `alt+shift+2` - terminates that command with number `2`
-
-## Experimental
-
-* scripting of custom commands and plugins in javascript
-
-See /bin/shellstart/*.js files for more info.
 
 ### git
 
@@ -90,12 +90,20 @@ thanks to [gift](https://github.com/sentientwaffle/gift)
 
 ### quick-cd
 
-hooks `cd` command and remembers visited paths which then are shown in `cd autocomplete`
+remembers visited paths when you `cd` into them.
+
+* `ctrl+alt+z` brings in list of sorted by most visited remembered paths with support for quick cd into them.
 
 ### edit
 
 * `alt+shift+e` - runs `subl` (sublime) editor at current directory
 * `ctrl+alt+shift+e` - runs `subl` (sublime) editor appending current directory
+
+### nodewebkit related 
+
+* global shortcut keys
+  * `ctrl+alt+a` - show/hide archconsole when running in nodewebkit
+* type `exit` - closes the current archconsole window
 
 ## How to install ##
 

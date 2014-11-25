@@ -81,7 +81,6 @@ module.exports.init = function(){
       shells.autocomplete(c.data.value, next);
     },
     "/active": function(c, next) {
-      console.log("SHELL ACTIVATED ", c)
       notifyDeactivatedNodewebkitClients()
       shellSockets[c.data.uuid].emit("/shells/active", {active: true})
     }

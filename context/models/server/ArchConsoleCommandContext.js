@@ -39,7 +39,7 @@ module.exports = function(c, commandReaction){
     },
     bindKey: function(keySequence, cmd, handler) {
       var uuid = generator.v1()
-      var handlerTrigger = function(triggerCtx){
+      var handlerTrigger = function(triggerCtx, triggerCallback){
         if(typeof cmd == "string") {
           var extendedC = _.extend({}, c, {
             data: {
@@ -50,7 +50,7 @@ module.exports = function(c, commandReaction){
           commandReaction.execute(extendedC, handler)
         } else
         if(typeof cmd == "function") {
-          cmd(_.extend({}, c, triggerCtx))
+          cmd(_.extend({}, c, triggerCtx), triggerCallback)
         }
       }
       socket.on("/commands/trigger/"+uuid, handlerTrigger)
@@ -64,7 +64,7 @@ module.exports = function(c, commandReaction){
     },
     bindKeyOnce: function(keySequence, cmd, handler) {
       var uuid = generator.v1()
-      var handlerTrigger = function(triggerCtx){
+      var handlerTrigger = function(triggerCtx, triggerCallback){
         if(typeof cmd == "string") {
           var extendedC = _.extend({}, c, {
             data: {
@@ -75,7 +75,7 @@ module.exports = function(c, commandReaction){
           commandReaction.execute(extendedC, handler)
         } else
         if(typeof cmd == "function") {
-          cmd(_.extend({},c,triggerCtx))
+          cmd(_.extend({},c,triggerCtx), triggerCallback)
         }
         socket.removeListener("/commands/trigger/"+uuid, handlerTrigger)
         delete trigger_cache[uuid]

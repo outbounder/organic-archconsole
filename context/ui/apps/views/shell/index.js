@@ -74,7 +74,10 @@ module.exports = Backbone.View.extend({
   bindKey: function(keySequence, cmd_id) {
     var self = this
     var handler = function(){
-      archconsole.emit("/commands/trigger/"+cmd_id, self.getKeyComboCtx())
+      archconsole.emit("/commands/trigger/"+cmd_id, self.getKeyComboCtx(), function(res){
+        if(res.clearCommandInput && self.commandInput)
+          self.commandInput.clearValue()
+      })
       return false
     }
     var keyCombo = KeyboardJS.on(keySequence, handler)
@@ -82,7 +85,10 @@ module.exports = Backbone.View.extend({
   bindKeyOnce: function(keySequence, cmd_id) {
     var self = this
     var handler = function(){
-      archconsole.emit("/commands/trigger/"+cmd_id, self.getKeyComboCtx())
+      archconsole.emit("/commands/trigger/"+cmd_id, self.getKeyComboCtx(), function(res){
+        if(res.clearCommandInput && self.commandInput)
+          self.commandInput.clearValue()
+      })
       keyCombo.clear()
       return false
     }

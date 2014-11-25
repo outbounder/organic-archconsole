@@ -92,6 +92,9 @@ module.exports = Backbone.View.extend({
   getValue: function(){
     return this.$("input").val()
   },
+  clearValue: function(){
+    this.$("input").val("")
+  },
   executeCommand: function(options){
     if(this.$("input").val() == "exit") {
       if(!window.nwrequire) return alert("not executable")
@@ -157,7 +160,7 @@ module.exports = Backbone.View.extend({
       return;
     }
 
-    if(e.keyCode == 13) {
+    if(e.keyCode == 13 && !e.altKey && !e.ctrlKey) {
       e.preventDefault();
       self.executeCommand({isPTY: e.shiftKey});
     }
