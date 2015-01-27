@@ -34,7 +34,6 @@ if(window.isNodeWebkit) {
   })
   archconsole.on("/shells/active", function(data){
     if(data.active == true) {
-      console.log("ACTIVE")
       var option = {
         key : "Ctrl+Alt+A",
         active : function() {
