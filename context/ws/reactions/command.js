@@ -121,9 +121,6 @@ var pipeOutputToClients = function(c, next){
       if(command.isPTY)
         c.socket.emit("/commands/output", {uuid: command.uuid, value: data})
       else
-      if(data.toString().indexOf("<") !== -1 && (data.toString().indexOf("</") !== -1 || data.toString().indexOf("/>") !== -1))
-        c.socket.emit("/commands/output", {uuid: command.uuid, value: data.toString()})
-      else
         try {
           c.socket.emit("/commands/output", {uuid: command.uuid, value: format.escapeUnixText(data)})
         } catch(e){
