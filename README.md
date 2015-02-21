@@ -96,8 +96,7 @@ remembers visited paths when you `cd` into them.
 
 ### edit
 
-* `alt+shift+e` - runs `subl` (sublime) editor at current directory
-* `ctrl+alt+shift+e` - runs `subl` (sublime) editor appending current directory
+* `ctrl+alt+shift+e` - runs `atom` (atom.io) editor at current working directory
 
 ### nodewebkit related 
 
