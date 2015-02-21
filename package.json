@@ -18,7 +18,7 @@
   },
   "node-remote": "<local>",
   "inject-js-start": "inject-js-start.js",
-  "version": "0.0.11",
+  "version": "0.1.0",
   "scripts": {
     "test": "jasmine-node ./tests"
   },
@@ -52,9 +52,9 @@
     "organic-socketioserver": "0.0.2",
     "organic-symlink": "0.0.2",
     "platform": "1.0.0",
-    "pty.js": "*",
+    "pty.js": "0.2.3",
     "shelljs": "0.1.2",
-    "term.js": "*",
+    "term.js": "0.0.3",
     "tree-kill": "0.0.6",
     "underscore": "1.4.4"
   },

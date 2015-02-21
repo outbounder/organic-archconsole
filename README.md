@@ -2,7 +2,7 @@
 
 ![Archconsole](https://raw.github.com/outbounder/organic-archconsole/master/preview.png)
 
-This is very limited web based unix/win/mac terminal.
+This is very limited web based unix/~~win~~/mac terminal.
 It is the simplest implementation ever still enough to handle:
 
 * everyday nodejs development
@@ -85,8 +85,8 @@ thanks to [gift](https://github.com/sentientwaffle/gift)
 * `nvm v0.8.14` - switches current working version of node. Works only when running node installed via [nvm](https://github.com/creationix/nvm)
 
 ## Requirements ##
+
 * nodejs v0.8.14 || v0.10.18 || above
-* unix/win platform
 
 ### quick-cd
 

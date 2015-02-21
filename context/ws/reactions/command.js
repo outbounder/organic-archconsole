@@ -21,48 +21,14 @@ var uuid = function () {
   return String(id++);
 }
 
-var splitByCommand = function(execCmd /* Reaction for executing a command */){
-  return function(c, parent) {
-    // split the command's value by AND and execute each as single command
-    async.eachSeries(c.data.value.split("&&"), function(cmd, next){
-
-      // split the command's value by OR with support of piping ->
-      // firstCommand.output is piped to secondCommand.input
-      if(cmd.indexOf("|") != -1) {
-
-        // pointer to firstCommand in a row
-        var cmdSource = null
-
-        // each command in a row is executed by the execCmd Reaction
-        var lastcmd = cmd.split("|").pop()
-        async.eachSeries(cmd.split("|"), function(cmdOrigin, n){
-
-          // create extendedC chemical for triggering new command reaction
-          // and set value of the current command to be executed
-          var extendedC = _.extend({}, c)
-          extendedC.data.value = cmdOrigin
-          extendedC.pipeToClients = cmdOrigin == lastcmd
-          execCmd(extendedC, function(){
-            // if there is firstCommand started pipe its outp/ut to current one from the row
-            if(cmdSource && cmdSource.command.stdout)
-              cmdSource.command.stdout.pipe(extendedC.command.stdin)
-            cmdSource = extendedC
-            n()
-          })
-        }, next)
-      } else {
-        var extendedC = _.extend({}, c)
-        extendedC.data.value = cmd
-        extendedC.pipeToClients = true
-        extendedC.pipeInputFromClients = true
-        execCmd(extendedC, function(err){
-          if(err instanceof Error) return next(err)
-          next()
-        })
-      }
-    }, function(err){
-      if(err) c.err = err
-      parent && parent()
+var transform = function(execCmd){
+  return function(c, next) {
+    var extendedC = _.extend({}, c)
+    extendedC.pipeToClients = true
+    extendedC.pipeInputFromClients = true
+    execCmd(extendedC, function(err){
+      if(err instanceof Error) return next && next(err)
+      next && next()
     })
   }
 }
@@ -161,16 +127,13 @@ var pipeInputFromClients = function(c, next) {
   next && next()
 }
 
-var execute = module.exports.execute =
-  splitByCommand(
-    chain(
-      prepareAsCommand,
-      aggregateEnvVars,
-      executeCommand,
-      pipeOutputToClients,
-      pipeTerminatedToClients,
-      pipeInputFromClients
-    )
-  )
+var execute = module.exports.execute = transform(chain(
+  prepareAsCommand,
+  aggregateEnvVars,
+  executeCommand,
+  pipeOutputToClients,
+  pipeTerminatedToClients,
+  pipeInputFromClients
+))
 
 module.exports.aggregateEnvVars = aggregateEnvVars
