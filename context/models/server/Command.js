@@ -5,7 +5,7 @@ var fs = require("fs");
 var path = require("path");
 var util = require("util")
 var EventEmitter = require("events").EventEmitter
-var kill = require("tree-kill")
+var kill = require("killprocess")
 
 var joinQuotedArgs = function(args) {
   var wholeArgumentBuffer = []
@@ -91,13 +91,7 @@ module.exports.prototype.startChild = function(){
     encoding: "binary"
   };
   
-  if(this.shell.platform.os.match("unix")) {
-    var args = _.compact(this.value.split(" "))
-    var cmd = args.shift()
-    joinQuotedArgs(args)
-    self.childProcess = spawn(cmd, args, options)
-  } else
-    self.childProcess = exec(this.value, options)
+  self.childProcess = exec(this.value, options)
 
   self.childProcess.on("error", function(){
     console.log(self.value)
@@ -114,7 +108,7 @@ module.exports.prototype.terminate = function(omitEmit){
   var self = this
   if(this.childProcess) {
     try {
-      process.kill(this.childProcess.pid, "SIGINT");
+      kill(this.childProcess.pid, "SIGINT");
     } catch(err){
       // silently do nothing if pid is not found
     }
