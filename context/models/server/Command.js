@@ -87,8 +87,7 @@ module.exports.prototype.startChild = function(){
 
   var options = {
     cwd: this.cwd || self.shell.cwd,
-    env: _.extend({}, self.shell.env, this.env),
-    encoding: "binary"
+    env: _.extend({}, self.shell.env, this.env)
   };
   
   self.childProcess = exec(this.value, options)
