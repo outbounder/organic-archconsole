@@ -56,6 +56,8 @@ In addition it is `organic inside`, which will bring tighter integration with or
 ### git
 
 * `alt+shift+g` - runs `git status` on current working directory
+* `alt+shift+p` - runs `git pull origin {currentBranchName}`
+* `alt+shift+u` - runs `git push origin {currentBranchName}`
 
 ### ungit
 
