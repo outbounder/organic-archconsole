@@ -11,11 +11,18 @@ module.exports = function(c, next){
   var nvmPath = _.find(envPATHparts, function(p){
     return p.indexOf(".nvm/") !== -1
   })
-  var new_nvm_path = nvmPath.replace(shell.currentNodeVersion, nodeVersion)
-  shell.currentNodeVersion = nodeVersion
+  var new_nvm_path = nvmPath
+  if (nodeVersion.indexOf("0.") === 0) {
+    new_nvm_path = nvmPath.replace(shell.currentNodeVersion, nodeVersion)
+    shell.currentNodeVersion = nodeVersion
+  } else {
+    new_nvm_path = nvmPath.replace(shell.currentNodeVersion, "versions/node/" + nodeVersion)
+    shell.currentNodeVersion = nodeVersion
+  }
   var new_path_parts = _.reject(envPATHparts, function(s){return s == nvmPath})
   new_path_parts.splice(0, 0, new_nvm_path)
   shell.env.PATH = new_path_parts.join(path.delimiter)
   c.output("<p> using "+nodeVersion+"</p>")
+  socket.emit("/shells/updated", {uuid: shell.uuid, value: shell.toJSON()});
   c.terminate()
 }

@@ -25,14 +25,14 @@ module.exports = function(c, next) {
     var shell = c.command.shell
     findPackageJSON(shell.cwd, function(packagejson){
       if(packagejson)
-        c.execute("node "+packagejson.main)
+        c.execute("npm start")
     })
   })
   c.bindKey("alt+shift+t", function(){
     var shell = c.command.shell
     findPackageJSON(shell.cwd, function(packagejson){
       if(packagejson && packagejson.scripts && packagejson.scripts.test)
-        c.execute(packagejson.scripts.test)
+        c.execute('npm test')
     })
   })
   c.terminate()
